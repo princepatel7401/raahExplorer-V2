@@ -1,0 +1,7 @@
+trip_id,departure_id,start_date,end_date,group_trip,seats_left,price_override_inr
+int-bali-4n5d,dep-bali-2026-10-11,2026-10-11,2026-10-15,false,,
+int-bali-4n5d,dep-bali-2026-12-18,2026-12-18,2026-12-22,true,14,69999
+dom-kashmir-4n5d,dep-kas-2026-08-12,2026-08-12,2026-08-16,false,,
+dom-kashmir-4n5d,dep-kas-2026-10-02,2026-10-02,2026-10-06,true,9,29999
+grp-manali-3n4d,dep-man-2026-07-10,2026-07-10,2026-07-13,true,22,
+grp-manali-3n4d,dep-man-2026-08-21,2026-08-21,2026-08-24,true,18,18999

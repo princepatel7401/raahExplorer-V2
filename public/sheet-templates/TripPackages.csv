@@ -1,0 +1,7 @@
+trip_id,package_key,package_label,price_per_person_inr,includes_override,excludes_override
+int-bali-4n5d,basic,Basic,74999,,
+int-bali-4n5d,premium,Premium,92999,Airport transfers premium vehicle|Hotel 4 nights 5 star|Breakfast and select meals|Sightseeing transfers|Concierge,
+dom-kashmir-4n5d,basic,Basic,32999,,
+dom-kashmir-4n5d,premium,Premium,41999,Hotel 4 nights upgraded stays|Daily breakfast|Private transfers where noted|Local concierge,
+grp-manali-3n4d,basic,Group Standard,17999,Hotel 3 nights shared group block|Breakfast and dinner|Group coach|Coordinator,
+grp-manali-3n4d,premium,Group Comfort,21999,Hotel 3 nights deluxe wing|Breakfast and dinner|Group vehicle|Coordinator|Room upgrade priority,

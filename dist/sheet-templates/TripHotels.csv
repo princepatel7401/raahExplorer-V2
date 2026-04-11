@@ -1,0 +1,11 @@
+trip_id,package_key,city,hotel_name,nights,rating
+int-bali-4n5d,basic,Ubud,Ubud Serenity Resort,2,4★
+int-bali-4n5d,basic,Seminyak,Ocean Edge Suites,2,4★
+int-bali-4n5d,premium,Ubud,Ubud Luxury Pool Villa Collection,2,5★
+int-bali-4n5d,premium,Seminyak,Ocean Edge Signature Suites,2,5★
+dom-kashmir-4n5d,basic,Srinagar,Dal View Residency,2,3★
+dom-kashmir-4n5d,basic,Pahalgam,Pine Valley Retreat,2,3★
+dom-kashmir-4n5d,premium,Srinagar,Dal Heritage Luxury Houseboat,2,4★
+dom-kashmir-4n5d,premium,Pahalgam,Pine Valley Premium Resort,2,4★
+grp-manali-3n4d,basic,Manali,Snowline Inn — Group Block,3,3★
+grp-manali-3n4d,premium,Manali,Snowline Inn — Deluxe Wing,3,4★
