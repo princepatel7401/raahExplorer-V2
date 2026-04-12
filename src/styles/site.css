@@ -984,13 +984,30 @@ h1 { margin: 14px 0 18px; font-size: clamp(2.7rem, 7vw, 5.3rem); line-height: 0.
 }
 
 .customizer-layout { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr); gap: 22px; }
+.customizer-layout > * {
+  min-width: 0;
+}
 .customizer-form, .proposal-card { padding: 22px; border-radius: 24px; }
-.field-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-.customizer-form { display: grid; gap: 16px; }
-.customizer-form label { display: grid; gap: 10px; font-weight: 500; font-size: 0.88rem; letter-spacing: 0.01em; color: rgb(var(--cream-rgb) / 0.72); }
+.field-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+.customizer-form { display: grid; gap: 16px; min-width: 0; }
+.customizer-form label {
+  display: grid;
+  gap: 10px;
+  min-width: 0;
+  font-weight: 500;
+  font-size: 0.88rem;
+  letter-spacing: 0.01em;
+  color: rgb(var(--cream-rgb) / 0.72);
+}
 .customizer-form input,
 .customizer-form textarea {
   width: 100%;
+  max-width: 100%;
+  min-width: 0;
   padding: 15px 16px;
   border-radius: 16px;
   border: 1px solid rgba(255, 255, 255, 0.08);
@@ -1021,6 +1038,8 @@ h1 { margin: 14px 0 18px; font-size: clamp(2.7rem, 7vw, 5.3rem); line-height: 0.
 .customizer-form input.customizer-month {
   display: block;
   width: 100%;
+  max-width: 100%;
+  min-width: 0;
   min-height: 52px;
   padding: 15px 48px 15px 16px;
   border-radius: 16px;
@@ -1068,9 +1087,11 @@ h1 { margin: 14px 0 18px; font-size: clamp(2.7rem, 7vw, 5.3rem); line-height: 0.
   opacity: 1;
   filter: invert(70%) sepia(45%) saturate(560%) hue-rotate(109deg) brightness(100%) contrast(92%);
 }
-/* Inline month/year segments (Chromium) */
+/* Inline month/year segments (Chromium / iOS Safari — shrink inside narrow cells) */
 .customizer-form input.customizer-month::-webkit-datetime-edit-fields-wrapper {
   padding: 0;
+  min-width: 0;
+  max-width: 100%;
 }
 .customizer-form input.customizer-month::-webkit-datetime-edit-text {
   color: rgb(var(--cream-rgb) / 0.45);
@@ -1102,6 +1123,8 @@ h1 { margin: 14px 0 18px; font-size: clamp(2.7rem, 7vw, 5.3rem); line-height: 0.
 /* Destination Type & other selects — native arrow replaced, matches panel theme */
 .customizer-form select.customizer-select {
   width: 100%;
+  max-width: 100%;
+  min-width: 0;
   padding: 15px 44px 15px 16px;
   border-radius: 16px;
   border: 1px solid rgba(255, 255, 255, 0.1);
@@ -1920,7 +1943,7 @@ h1 { margin: 14px 0 18px; font-size: clamp(2.7rem, 7vw, 5.3rem); line-height: 0.
     gap: 26px;
   }
   .field-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 
   /* Itinerary: Day 1–4 as compact chips, scroll horizontally */
@@ -2071,8 +2094,10 @@ h1 { margin: 14px 0 18px; font-size: clamp(2.7rem, 7vw, 5.3rem); line-height: 0.
   .proposal-card {
     padding: 18px;
   }
-  .customizer-form label {
-    min-width: 0;
+  /* Tighter month field on phones — iOS WebKit + calendar affordance */
+  .customizer-form input.customizer-month {
+    padding: 13px 42px 13px 12px;
+    font-size: 0.88rem;
   }
   .footer-grid > .footer-col:last-child {
     grid-column: 1 / -1;
