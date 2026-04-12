@@ -10,17 +10,20 @@ export function ItinerarySection({ itinerary }: { itinerary: SiteContent["itiner
     <section id="itinerary" className="section">
       <SectionHeader eyebrow={itinerary.eyebrow} title={itinerary.title} copy={itinerary.copy} />
 
-      <div className="timeline">
+      <div className="timeline" aria-label="Itinerary days — scroll sideways to see all days">
         {itinerary.days.map((day, index) => (
-          <article
+          <button
+            type="button"
             className={`timeline-card ${index === activeIndex ? "active" : ""}`}
             key={day.day}
             onClick={() => setActiveIndex(index)}
+            aria-pressed={index === activeIndex}
+            aria-label={`${day.day}: ${day.title}`}
           >
             <span className="day-badge">{day.day}</span>
             <h3>{day.title}</h3>
             <p>{day.summary}</p>
-          </article>
+          </button>
         ))}
       </div>
 

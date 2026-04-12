@@ -1190,8 +1190,38 @@ h1 { margin: 14px 0 18px; font-size: clamp(2.7rem, 7vw, 5.3rem); line-height: 0.
 .feature-list, .detail-points { margin: 0; padding-left: 18px; display: grid; gap: 12px; }
 
 .timeline { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; margin-bottom: 22px; }
-.timeline-card { padding: 18px; border-radius: 20px; cursor: pointer; }
-.timeline-card.active { background: linear-gradient(135deg, rgb(130 175 125 / 0.22), rgb(var(--logo-rgb) / 0.2)), var(--panel); }
+.timeline-card {
+  padding: 18px;
+  border-radius: 20px;
+  cursor: pointer;
+  appearance: none;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+}
+.timeline-card.active {
+  background: linear-gradient(145deg, rgb(var(--neon-rgb) / 0.2), rgb(130 175 125 / 0.32), rgb(var(--logo-rgb) / 0.28)), var(--panel);
+  border-color: rgb(var(--neon-rgb) / 0.55);
+  box-shadow:
+    var(--shadow-soft),
+    0 0 0 1px rgb(var(--neon-rgb) / 0.35),
+    0 10px 36px rgb(var(--neon-rgb) / 0.18);
+  transform: translateY(-2px);
+  z-index: 1;
+}
+.timeline-card.active .day-badge {
+  background: rgb(var(--neon-rgb) / 0.28);
+  border-color: rgb(var(--neon-rgb) / 0.5);
+  color: var(--neon);
+  box-shadow: 0 0 16px rgb(var(--neon-rgb) / 0.22);
+}
+.timeline-card.active h3 {
+  color: rgb(var(--cream-rgb) / 0.99);
+  font-weight: 500;
+}
+.timeline-card.active p {
+  color: rgb(var(--cream-rgb) / 0.82);
+}
 .day-badge { display: inline-flex; margin-bottom: 10px; padding: 8px 12px; border-radius: 999px; background: rgb(var(--neon-rgb) / 0.1); color: rgb(var(--neon-rgb) / 0.95); font-weight: 600; font-size: 0.65rem; letter-spacing: 0.14em; text-transform: uppercase; border: 1px solid rgb(var(--neon-rgb) / 0.2); }
 .timeline-card h3 { margin: 0 0 8px; font-weight: 400; font-size: 1rem; letter-spacing: -0.01em; color: rgb(var(--cream-rgb) / 0.95); }
 .timeline-card p {
@@ -1423,6 +1453,8 @@ h1 { margin: 14px 0 18px; font-size: clamp(2.7rem, 7vw, 5.3rem); line-height: 0.
   grid-auto-columns: 260px;
   gap: 16px;
   overflow-x: auto;
+  /* Room so hover lift / shadows are not clipped by the scrollport */
+  padding-top: 10px;
   padding-bottom: 10px;
   scroll-snap-type: x mandatory;
 }
@@ -1742,7 +1774,16 @@ h1 { margin: 14px 0 18px; font-size: clamp(2.7rem, 7vw, 5.3rem); line-height: 0.
   box-shadow: 0 8px 18px rgb(var(--logo-rgb) / 0.28);
 }
 
-.footer-contact li { display: grid; grid-template-columns: 22px 1fr; gap: 12px; align-items: start; }
+.footer-contact li {
+  display: grid;
+  grid-template-columns: 22px minmax(0, 1fr);
+  gap: 12px;
+  align-items: start;
+}
+.footer-contact li > :last-child {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
 .footer-icon {
   width: 22px; height: 22px; display: grid; place-items: center;
   color: rgb(var(--cream-rgb) / 0.9);
@@ -1773,7 +1814,7 @@ h1 { margin: 14px 0 18px; font-size: clamp(2.7rem, 7vw, 5.3rem); line-height: 0.
   color: var(--muted);
   font-size: 0.92rem;
 }
-.footer-legal { display: flex; gap: 18px; }
+.footer-legal { display: flex; flex-wrap: wrap; gap: 18px; }
 .footer-legal a { color: var(--muted); }
 .footer-legal a:hover { color: var(--text); }
 
@@ -1872,9 +1913,133 @@ h1 { margin: 14px 0 18px; font-size: clamp(2.7rem, 7vw, 5.3rem); line-height: 0.
   }
 }
 
+/* Narrow screens: full-width footer columns; customize form fields stack */
+@media (max-width: 900px) {
+  .footer-grid {
+    grid-template-columns: 1fr;
+    gap: 26px;
+  }
+  .field-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* Itinerary: Day 1–4 as compact chips, scroll horizontally */
+  .timeline {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    gap: 10px;
+    margin-bottom: 16px;
+    /* Top/bottom inset so active lift, glow, and badges are not clipped */
+    padding-top: 12px;
+    padding-bottom: 12px;
+    overflow-x: auto;
+    overflow-y: visible;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: 8px;
+    margin-inline: -6px;
+    padding-inline: 6px;
+    scrollbar-gutter: stable;
+  }
+  .timeline-card {
+    flex: 0 0 auto;
+    width: min(172px, 46vw);
+    min-width: 136px;
+    max-width: 200px;
+    scroll-snap-align: start;
+    padding: 11px 12px 13px;
+    border-radius: 16px;
+  }
+  .timeline-card h3 {
+    font-size: 0.88rem;
+    margin: 0 0 6px;
+  }
+  .timeline-card p {
+    font-size: 0.75rem;
+    line-height: 1.45;
+    letter-spacing: 0.01em;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  #itinerary .day-badge {
+    margin-bottom: 8px;
+    padding: 5px 9px;
+    font-size: 0.58rem;
+  }
+  /* Avoid vertical shift inside horizontal scroller (tops get clipped) */
+  .timeline-card:hover {
+    transform: none;
+  }
+  .timeline-card.active {
+    transform: none;
+  }
+
+  /* Itinerary: smaller detail block below */
+  .itinerary-display {
+    padding: 14px 14px 16px;
+    gap: 12px;
+    border-radius: 20px;
+  }
+  .itinerary-display .itinerary-photo {
+    min-height: 132px;
+    max-height: min(32vh, 240px);
+    aspect-ratio: 16 / 10;
+    border-radius: 14px;
+  }
+  .itinerary-display .itinerary-photo img {
+    border-radius: 14px;
+    object-position: center top;
+  }
+  .itinerary-detail h3 {
+    font-size: clamp(1.1rem, 4vw, 1.28rem);
+    margin: 6px 0 8px;
+  }
+  .itinerary-detail > p:not(.eyebrow) {
+    font-size: 0.86rem;
+    line-height: 1.55;
+  }
+  .itinerary-detail .detail-points {
+    gap: 8px;
+    padding-left: 16px;
+    font-size: 0.82rem;
+    line-height: 1.45;
+  }
+
+  /* Trending trips: narrower cards + shorter hero image */
+  .trip-rail {
+    grid-auto-columns: min(196px, 76vw);
+    gap: 12px;
+  }
+  .trip-thumb {
+    height: 168px;
+  }
+  .trip-thumb img {
+    object-position: center top;
+  }
+  .trip-card-body {
+    padding: 11px 12px 13px;
+    gap: 6px;
+  }
+  .trip-card-body strong {
+    font-size: 0.95rem;
+  }
+  .trip-card-body .trip-muted {
+    font-size: 0.8rem;
+    line-height: 1.45;
+  }
+  .trip-meta {
+    font-size: 0.8rem;
+    gap: 4px;
+  }
+}
+
 @media (max-width: 760px) {
   .page-shell { width: min(100% - 24px, 1280px); }
-  .site-header, .top-nav, .hero-actions, .field-grid, .journey-grid, .quote-grid, .section-gallery .gallery-grid, .trust-strip, .timeline {
+  .site-header, .top-nav, .hero-actions, .field-grid, .journey-grid, .quote-grid, .section-gallery .gallery-grid, .trust-strip {
     grid-template-columns: 1fr; flex-direction: column;
   }
   .trust-strip { gap: 8px; padding: 10px 10px; }
@@ -1898,7 +2063,17 @@ h1 { margin: 14px 0 18px; font-size: clamp(2.7rem, 7vw, 5.3rem); line-height: 0.
   .top-nav { display: none; }
   h1 { font-size: 2.6rem; }
   .section-contrast { padding: 28px 18px; }
-  .site-footer { padding: 26px 18px 16px; }
+  .site-footer {
+    margin-top: 40px;
+    padding: 26px 18px 16px;
+  }
+  .customizer-form,
+  .proposal-card {
+    padding: 18px;
+  }
+  .customizer-form label {
+    min-width: 0;
+  }
   .footer-grid > .footer-col:last-child {
     grid-column: 1 / -1;
     text-align: center;
@@ -1909,5 +2084,37 @@ h1 { margin: 14px 0 18px; font-size: clamp(2.7rem, 7vw, 5.3rem); line-height: 0.
   .footer-bottom { flex-direction: column; align-items: start; }
   .trip-rail-wrap { padding: 14px; }
   .trip-modal .trip-gallery { grid-template-columns: 1fr; }
+
+  /* Trip category tabs — compact on phones */
+  .trip-toolbar {
+    margin: 8px 0 12px;
+  }
+  .trip-tabs {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0;
+    padding: 0;
+  }
+  .trip-tab {
+    padding: 8px 6px 10px;
+    font-size: 0.7rem;
+    line-height: 1.25;
+    letter-spacing: 0.01em;
+    gap: 6px;
+    border-radius: 10px 10px 0 0;
+  }
+  .trip-tab-icon {
+    width: 16px;
+    height: 16px;
+  }
+  .trip-tab-icon svg {
+    width: 14px;
+    height: 14px;
+  }
+  .trip-tab-label {
+    white-space: normal;
+    text-align: center;
+    line-height: 1.2;
+    max-width: 100%;
+  }
 }
 
