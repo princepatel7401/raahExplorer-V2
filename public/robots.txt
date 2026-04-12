@@ -1,0 +1,5 @@
+# https://www.raahexplorer.com — update domain if yours differs
+User-agent: *
+Allow: /
+
+Sitemap: https://www.raahexplorer.com/sitemap.xml
