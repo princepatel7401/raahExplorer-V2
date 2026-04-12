@@ -11,6 +11,7 @@ import { TripsSection } from "./components/TripsSection";
 import { Footer } from "./components/Footer";
 import { siteContent } from "./data/siteContent";
 import { useTripsFromSheet } from "./hooks/useTripsFromSheet";
+import { useHeroCollageFromSheet } from "./hooks/useHeroCollageFromSheet";
 import { useCallback, useEffect, useRef, useState, type AnimationEvent } from "react";
 
 /** Must match splash flight duration in `site.css` (`orbitPath` / `crossFallback`). */
@@ -40,6 +41,7 @@ function App() {
   );
 
   const tripsSheet = useTripsFromSheet(siteContent.trips);
+  const heroCollageSheet = useHeroCollageFromSheet(siteContent.hero);
 
   return (
     <>
@@ -73,7 +75,10 @@ function App() {
       <Header brand={siteContent.brand} nav={siteContent.nav} ctaLabel={siteContent.cta.buttonLabel} />
 
       <main id="top">
-        <HeroSection hero={siteContent.hero} />
+        <HeroSection
+          hero={{ ...siteContent.hero, collage: heroCollageSheet.collage }}
+          collageNotice={heroCollageSheet.error}
+        />
 
         <section className="trust-strip" aria-label="Trip types and support">
           {siteContent.trustStrip.map((item) => (

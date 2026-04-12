@@ -887,6 +887,18 @@ h1 { margin: 14px 0 18px; font-size: clamp(2.7rem, 7vw, 5.3rem); line-height: 0.
   display: block;
 }
 .hero-collage__cell:nth-child(1) img { object-position: center 36%; }
+.hero-collage-notice {
+  margin: 10px 0 0;
+  padding: 8px 10px;
+  font-size: 0.72rem;
+  line-height: 1.45;
+  letter-spacing: 0.01em;
+  color: rgb(var(--cream-rgb) / 0.62);
+  border-radius: 12px;
+  background: rgb(var(--neon-rgb) / 0.06);
+  border: 1px solid rgb(var(--neon-rgb) / 0.14);
+  max-width: 100%;
+}
 .glow-card {
   background:
     radial-gradient(circle at top right, rgb(var(--neon-rgb) / 0.1), transparent 45%),

@@ -1,4 +1,3 @@
-import Papa from "papaparse";
 import type {
   Trip,
   TripCategoryKey,
@@ -7,33 +6,14 @@ import type {
   TripItineraryDay,
   TripPackageBundle
 } from "../types/site";
+import { fetchGoogleSheetCsv, getSheetCell } from "./googleSheetCsv";
 
 const SHEETS = ["TripsMaster", "TripPackages", "TripHotels", "TripItinerary", "TripDepartures"] as const;
 
 type SheetName = (typeof SHEETS)[number];
 
-function gvizUrl(spreadsheetId: string, sheetName: SheetName): string {
-  return `https://docs.google.com/spreadsheets/d/${spreadsheetId}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(sheetName)}`;
-}
-
-function normKey(k: string): string {
-  return k.replace(/^\uFEFF/, "").trim().toLowerCase();
-}
-
-function rowMap(row: Record<string, string>): Record<string, string> {
-  const out: Record<string, string> = {};
-  for (const [k, v] of Object.entries(row)) {
-    out[normKey(k)] = v ?? "";
-  }
-  return out;
-}
-
 function get(row: Record<string, string>, ...keys: string[]): string {
-  for (const k of keys) {
-    const v = row[normKey(k)];
-    if (v !== undefined && v !== "") return v;
-  }
-  return "";
+  return getSheetCell(row, ...keys);
 }
 
 function splitPipe(s: string): string[] {
@@ -53,21 +33,8 @@ function parseIntSafe(s: string, fallback = 0): number {
   return Number.isFinite(n) ? n : fallback;
 }
 
-async function fetchCsv(spreadsheetId: string, sheet: SheetName): Promise<Record<string, string>[]> {
-  const url = gvizUrl(spreadsheetId, sheet);
-  const res = await fetch(url);
-  if (!res.ok) {
-    throw new Error(`Google Sheet "${sheet}" failed (${res.status}). Check sharing is "Anyone with the link can view".`);
-  }
-  const text = await res.text();
-  const parsed = Papa.parse<Record<string, string>>(text, {
-    header: true,
-    skipEmptyLines: true
-  });
-  if (parsed.errors.length) {
-    console.warn(`CSV parse warnings (${sheet}):`, parsed.errors);
-  }
-  return (parsed.data as Record<string, string>[]).map(rowMap);
+function fetchCsv(spreadsheetId: string, sheet: SheetName): Promise<Record<string, string>[]> {
+  return fetchGoogleSheetCsv(spreadsheetId, sheet);
 }
 
 /** Maps TripsMaster.category → site tabs: international | domestic | group */

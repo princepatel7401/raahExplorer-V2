@@ -1,6 +1,14 @@
 import type { SiteContent } from "../types/site";
+import { CollageImage } from "./CollageImage";
 
-export function HeroSection({ hero }: { hero: SiteContent["hero"] }) {
+export function HeroSection({
+  hero,
+  collageNotice
+}: {
+  hero: SiteContent["hero"];
+  /** Shown when spreadsheet collage failed to load (e.g. missing tab or URLs) */
+  collageNotice?: string | null;
+}) {
   return (
     <section className="hero">
       <div className="hero-copy">
@@ -33,10 +41,15 @@ export function HeroSection({ hero }: { hero: SiteContent["hero"] }) {
           <div className="hero-collage" role="img" aria-label="Tour destination collage">
             {hero.collage.map((item, i) => (
               <div className="hero-collage__cell" key={`${item.src}-${i}`}>
-                <img src={item.src} alt={item.alt} loading={i === 0 ? "eager" : "lazy"} />
+                <CollageImage src={item.src} alt={item.alt} loading={i === 0 ? "eager" : "lazy"} />
               </div>
             ))}
           </div>
+          {collageNotice ? (
+            <p className="hero-collage-notice" role="status">
+              {collageNotice}
+            </p>
+          ) : null}
         </div>
       </div>
     </section>

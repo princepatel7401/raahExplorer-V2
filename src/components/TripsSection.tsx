@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import type { SiteContent, Trip, TripCategoryKey, TripDeparture, TripPackageBundle } from "../types/site";
+import { CollageImage } from "./CollageImage";
 
 interface TripsSectionProps {
   trips: SiteContent["trips"];
@@ -116,7 +117,7 @@ function TripDetailsModal({ state, onClose }: { state: TripDetailsState; onClose
         </button>
 
         <header className="trip-modal-hero">
-          <img src={trip.coverImage} alt={trip.title} />
+          <CollageImage src={trip.coverImage} alt={trip.title} loading="eager" />
           <div className="trip-modal-heroText">
             <span className="trip-chip">{trip.category.toUpperCase()}</span>
             <h2>{trip.title}</h2>
@@ -235,7 +236,7 @@ function TripDetailsModal({ state, onClose }: { state: TripDetailsState; onClose
                     </ul>
                   </div>
                   <div className="itinerary-photo">
-                    <img src={d.image} alt={`${trip.title} day ${d.day}`} />
+                    <CollageImage src={d.image} alt={`${trip.title} day ${d.day}`} loading="lazy" />
                   </div>
                 </article>
               ))}
@@ -245,8 +246,8 @@ function TripDetailsModal({ state, onClose }: { state: TripDetailsState; onClose
           <div className="trip-modal-card trip-modal-wide">
             <h3>Photos</h3>
             <div className="trip-gallery">
-              {trip.gallery.map((src) => (
-                <img key={src} src={src} alt={`${trip.title} gallery`} />
+              {trip.gallery.map((src, gi) => (
+                <CollageImage key={`${src}-${gi}`} src={src} alt={`${trip.title} gallery`} loading="lazy" />
               ))}
             </div>
           </div>
@@ -309,7 +310,7 @@ export function TripsSection({ trips, tripsLoading, tripsError }: TripsSectionPr
               onClick={() => setDetails({ trip: t })}
             >
               <div className="trip-thumb">
-                <img src={t.coverImage} alt={t.title} />
+                <CollageImage src={t.coverImage} alt={t.title} loading="lazy" />
               </div>
               <div className="trip-card-body">
                 <strong>{t.title}</strong>

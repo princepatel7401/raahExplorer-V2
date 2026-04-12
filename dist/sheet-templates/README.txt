@@ -84,6 +84,23 @@ Lists in one cell
 Use pipe | between items (no commas inside one cell unless you quote the whole cell
 in CSV).
 
+Hero collage (optional tab HeroCollage)
+---------------------------------------
+1) Add a tab named exactly: HeroCollage
+
+2) Row 1 headers (any of these column names work):
+   - image_url  (or: url, link, drive_url, src) — required per row
+   - alt — optional (accessibility label; defaults to “Destination photo”)
+   - sort_order — optional (1, 2, 3… controls left-to-top order in the collage)
+
+3) Paste Google Drive “Share → Anyone with the link” file links, or any https image URL.
+   The app converts Drive links to a view URL automatically.
+
+4) Up to **6** images are used (same as the built-in hero grid). Copy sample rows from
+   public/sheet-templates/HeroCollage.csv
+
+5) If the tab is missing or empty, the site keeps the default hero images from code.
+
 Troubleshooting
 ---------------
 - Tab names must match exactly (case-sensitive).
