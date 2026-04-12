@@ -1034,6 +1034,16 @@ h1 { margin: 14px 0 18px; font-size: clamp(2.7rem, 7vw, 5.3rem); line-height: 0.
   box-shadow: 0 0 0 3px rgb(var(--neon-rgb) / 0.12);
 }
 
+/* Wrapper: iOS Safari ignores width on type=month unless clipped by a shrinkable parent */
+.customizer-month-wrap {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow: hidden;
+  border-radius: 16px;
+}
+
 /* Travel Month — native month picker (aligned with .customizer-select) */
 .customizer-form input.customizer-month {
   display: block;
@@ -1041,7 +1051,8 @@ h1 { margin: 14px 0 18px; font-size: clamp(2.7rem, 7vw, 5.3rem); line-height: 0.
   max-width: 100%;
   min-width: 0;
   min-height: 52px;
-  padding: 15px 48px 15px 16px;
+  /* Match .customizer-select horizontal padding (calendar affordance) */
+  padding: 15px 44px 15px 16px;
   border-radius: 16px;
   border: 1px solid rgba(255, 255, 255, 0.1);
   background-color: rgba(255, 255, 255, 0.06);
@@ -1088,10 +1099,16 @@ h1 { margin: 14px 0 18px; font-size: clamp(2.7rem, 7vw, 5.3rem); line-height: 0.
   filter: invert(70%) sepia(45%) saturate(560%) hue-rotate(109deg) brightness(100%) contrast(92%);
 }
 /* Inline month/year segments (Chromium / iOS Safari — shrink inside narrow cells) */
+.customizer-form input.customizer-month::-webkit-datetime-edit {
+  width: 100%;
+  min-width: 0;
+  padding: 0;
+}
 .customizer-form input.customizer-month::-webkit-datetime-edit-fields-wrapper {
   padding: 0;
   min-width: 0;
   max-width: 100%;
+  width: 100%;
 }
 .customizer-form input.customizer-month::-webkit-datetime-edit-text {
   color: rgb(var(--cream-rgb) / 0.45);
@@ -1946,6 +1963,18 @@ h1 { margin: 14px 0 18px; font-size: clamp(2.7rem, 7vw, 5.3rem); line-height: 0.
     grid-template-columns: minmax(0, 1fr);
   }
 
+  /* Customizer: same width/height feel on narrow screens (iOS month + text/select) */
+  .customizer-form input,
+  .customizer-form select.customizer-select,
+  .customizer-form textarea {
+    font-size: 16px;
+  }
+  .customizer-form input.customizer-month {
+    min-height: 0;
+    padding: 15px 44px 15px 16px;
+    line-height: 1.45;
+  }
+
   /* Itinerary: Day 1–4 as compact chips, scroll horizontally */
   .timeline {
     display: flex;
@@ -2093,11 +2122,6 @@ h1 { margin: 14px 0 18px; font-size: clamp(2.7rem, 7vw, 5.3rem); line-height: 0.
   .customizer-form,
   .proposal-card {
     padding: 18px;
-  }
-  /* Tighter month field on phones — iOS WebKit + calendar affordance */
-  .customizer-form input.customizer-month {
-    padding: 13px 42px 13px 12px;
-    font-size: 0.88rem;
   }
   .footer-grid > .footer-col:last-child {
     grid-column: 1 / -1;

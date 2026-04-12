@@ -102,18 +102,20 @@ export function CustomizerSection({ customizer }: { customizer: SiteContent["cus
         ) : field.type === "textarea" ? (
           <textarea {...common} rows={5} placeholder={field.placeholder} />
         ) : field.type === "month" ? (
-          <input
-            {...common}
-            type="month"
-            min="2024-01"
-            max="2035-12"
-            className={[
-              "customizer-month",
-              !(values[field.label] ?? "").trim() ? "customizer-month--empty" : "",
-            ]
-              .filter(Boolean)
-              .join(" ")}
-          />
+          <span className="customizer-month-wrap">
+            <input
+              {...common}
+              type="month"
+              min="2024-01"
+              max="2035-12"
+              className={[
+                "customizer-month",
+                !(values[field.label] ?? "").trim() ? "customizer-month--empty" : "",
+              ]
+                .filter(Boolean)
+                .join(" ")}
+            />
+          </span>
         ) : field.type === "inr" ? (
           <input
             id={id}
