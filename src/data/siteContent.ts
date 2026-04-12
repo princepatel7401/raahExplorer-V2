@@ -15,7 +15,7 @@ export const siteContent: SiteContent = {
     { label: "Customize", href: "#customize" }
   ],
   hero: {
-    eyebrow: "Domestic, International, Group & Custom Trips",
+    eyebrow: "Raah Explorer — Domestic, International, Group & Custom Trips",
     title: "Travel beyond packages with a smarter way to plan every journey.",
     text: "Raah Explorer creates premium domestic holidays, international escapes, curated group tours, and fully custom personal trips with detailed day-wise itinerary planning, stays, transport, experiences, and support from start to finish.",
     primaryCta: "Customize Your Trip",
