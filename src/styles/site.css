@@ -1063,7 +1063,8 @@ h1 { margin: 14px 0 18px; font-size: clamp(2.7rem, 7vw, 5.3rem); line-height: 0.
   max-width: 100%;
   min-width: 0;
   min-height: 52px;
-  text-align: start;
+  text-align: left;
+  direction: ltr;
   /* Match .customizer-select horizontal padding (calendar affordance) */
   padding: 15px 44px 15px 16px;
   border-radius: 16px;
@@ -1152,6 +1153,7 @@ h1 { margin: 14px 0 18px; font-size: clamp(2.7rem, 7vw, 5.3rem); line-height: 0.
 @-moz-document url-prefix() {
   .customizer-form input.customizer-month {
     padding-right: 16px;
+    text-align: left;
   }
 }
 
@@ -1991,6 +1993,11 @@ h1 { margin: 14px 0 18px; font-size: clamp(2.7rem, 7vw, 5.3rem); line-height: 0.
     min-height: 0;
     padding: 15px 44px 15px 16px;
     line-height: 1.45;
+    text-align: left;
+    direction: ltr;
+  }
+  .customizer-form input.customizer-month::-webkit-datetime-edit-fields-wrapper {
+    justify-content: flex-start;
   }
 
   /* Itinerary: Day 1–4 as compact chips, scroll horizontally */
