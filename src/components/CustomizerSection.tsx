@@ -3,6 +3,7 @@ import type { CustomizerFieldOption, SiteContent } from "../types/site";
 import { digitsOnly, formatIndianBudgetInput } from "../lib/indianRupeesFormat";
 import { emptyCustomizerValues, openCustomizerMailto } from "../lib/tripCustomizerMailto";
 import { SectionHeader } from "./SectionHeader";
+import { TravelMonthField } from "./TravelMonthField";
 
 function fieldId(label: string) {
   return `customizer-${label.replace(/\s+/g, "-").toLowerCase()}`;
@@ -102,20 +103,15 @@ export function CustomizerSection({ customizer }: { customizer: SiteContent["cus
         ) : field.type === "textarea" ? (
           <textarea {...common} rows={5} placeholder={field.placeholder} />
         ) : field.type === "month" ? (
-          <span className="customizer-month-wrap">
-            <input
-              {...common}
-              type="month"
-              min="2024-01"
-              max="2035-12"
-              className={[
-                "customizer-month",
-                !(values[field.label] ?? "").trim() ? "customizer-month--empty" : "",
-              ]
-                .filter(Boolean)
-                .join(" ")}
-            />
-          </span>
+          <TravelMonthField
+            id={id}
+            value={values[field.label] ?? ""}
+            onChange={(next) => setField(field.label, next)}
+            invalid={invalid}
+            min="2024-01"
+            max="2035-12"
+            ariaDescribedBy={invalid ? `${id}-error` : undefined}
+          />
         ) : field.type === "inr" ? (
           <input
             id={id}

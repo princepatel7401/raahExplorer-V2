@@ -1056,6 +1056,18 @@ h1 { margin: 14px 0 18px; font-size: clamp(2.7rem, 7vw, 5.3rem); line-height: 0.
   border-radius: 16px;
 }
 
+/* Mobile / narrow: month + year selects (see TravelMonthField.tsx) */
+.customizer-month-mobile {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  gap: 10px;
+  width: 100%;
+  min-width: 0;
+}
+.customizer-month-mobile .customizer-select {
+  min-width: 0;
+}
+
 /* Travel Month — native month picker (aligned with .customizer-select) */
 .customizer-form input.customizer-month {
   display: block;
