@@ -1051,6 +1051,7 @@ h1 { margin: 14px 0 18px; font-size: clamp(2.7rem, 7vw, 5.3rem); line-height: 0.
   max-width: 100%;
   min-width: 0;
   min-height: 52px;
+  text-align: start;
   /* Match .customizer-select horizontal padding (calendar affordance) */
   padding: 15px 44px 15px 16px;
   border-radius: 16px;
@@ -1103,8 +1104,13 @@ h1 { margin: 14px 0 18px; font-size: clamp(2.7rem, 7vw, 5.3rem); line-height: 0.
   width: 100%;
   min-width: 0;
   padding: 0;
+  text-align: start;
 }
 .customizer-form input.customizer-month::-webkit-datetime-edit-fields-wrapper {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-wrap: nowrap;
   padding: 0;
   min-width: 0;
   max-width: 100%;
