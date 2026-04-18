@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import type { SiteContent, Trip, TripCategoryKey, TripDeparture, TripPackageBundle } from "../types/site";
+import { siteContent } from "../data/siteContent";
 import { CollageImage } from "./CollageImage";
 
 interface TripsSectionProps {
@@ -91,6 +92,7 @@ function TripDetailsModal({ state, onClose }: { state: TripDetailsState; onClose
   if (!state) return null;
   const trip = state.trip;
   const [pkgKey, setPkgKey] = useState(trip.defaultPackageKey);
+  const [pdfBusy, setPdfBusy] = useState(false);
 
   useEffect(() => {
     setPkgKey(trip.defaultPackageKey);
@@ -103,6 +105,25 @@ function TripDetailsModal({ state, onClose }: { state: TripDetailsState; onClose
   const includes = pkg.includes ?? trip.includes;
   const excludes = pkg.excludes ?? trip.excludes;
 
+  const onDownloadPdf = async () => {
+    setPdfBusy(true);
+    try {
+      const { downloadTripBrochurePdf } = await import("../pdf/TripBrochureDocument");
+      const generatedAt = new Date().toLocaleString("en-IN", { dateStyle: "long", timeStyle: "short" });
+      await downloadTripBrochurePdf({
+        trip,
+        pkg,
+        brandName: siteContent.brand.name,
+        generatedAt,
+      });
+    } catch (e) {
+      console.error(e);
+      window.alert("Could not generate the PDF. Check your connection and try again.");
+    } finally {
+      setPdfBusy(false);
+    }
+  };
+
   return (
     <div className="trip-modal-backdrop" role="presentation" onMouseDown={onClose}>
       <div
@@ -112,9 +133,22 @@ function TripDetailsModal({ state, onClose }: { state: TripDetailsState; onClose
         aria-label={`${trip.title} details`}
         onMouseDown={(e) => e.stopPropagation()}
       >
-        <button className="trip-modal-close" type="button" onClick={onClose} aria-label="Close">
-          ×
-        </button>
+        <div className="trip-modal-actions">
+          <button
+            className="trip-modal-pdf"
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              void onDownloadPdf();
+            }}
+            disabled={pdfBusy}
+          >
+            {pdfBusy ? "Preparing PDF…" : "Download PDF brochure"}
+          </button>
+          <button className="trip-modal-close" type="button" onClick={onClose} aria-label="Close">
+            ×
+          </button>
+        </div>
 
         <header className="trip-modal-hero">
           <CollageImage src={trip.coverImage} alt={trip.title} loading="eager" />
@@ -243,14 +277,21 @@ function TripDetailsModal({ state, onClose }: { state: TripDetailsState; onClose
             </div>
           </div>
 
-          <div className="trip-modal-card trip-modal-wide">
-            <h3>Photos</h3>
-            <div className="trip-gallery">
-              {trip.gallery.map((src, gi) => (
-                <CollageImage key={`${src}-${gi}`} src={src} alt={`${trip.title} gallery`} loading="lazy" />
-              ))}
+          {trip.gallery.length > 0 ? (
+            <div className="trip-modal-card trip-modal-wide">
+              <h3>Photos</h3>
+              <div
+                className="trip-gallery trip-gallery--collage"
+                data-gallery-count={trip.gallery.length <= 6 ? String(trip.gallery.length) : "many"}
+              >
+                {trip.gallery.map((src, gi) => (
+                  <div className="trip-gallery__cell" key={`${src}-${gi}`}>
+                    <CollageImage src={src} alt={`${trip.title} gallery ${gi + 1}`} loading="lazy" />
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
+          ) : null}
         </section>
       </div>
     </div>

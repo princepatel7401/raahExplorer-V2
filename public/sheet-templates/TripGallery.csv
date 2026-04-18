@@ -1,0 +1,15 @@
+trip_id,sort_order,image_url,alt
+int-bali-4n5d,1,https://images.unsplash.com/photo-1518548419970-58e3b4079ab2?w=800,Ubud rice terraces
+int-bali-4n5d,2,https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=800,Clear water and boat
+int-bali-4n5d,3,https://images.unsplash.com/photo-1544644181-1484b3fdfc62?w=800,Beach sunset
+int-bali-4n5d,4,https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800,Coastline
+int-bali-4n5d,5,https://images.unsplash.com/photo-1537996194471-e257cf670b8a?w=800,Resort pool area
+dom-kashmir-4n5d,1,https://images.unsplash.com/photo-1597075687490-8ebb67367227?w=800,Dal Lake
+dom-kashmir-4n5d,2,https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800,Gulmarg snow
+dom-kashmir-4n5d,3,https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800,Mountain valley
+dom-kashmir-4n5d,4,https://images.unsplash.com/photo-1566836610590-4a4a3b3e4b8a?w=800,Houseboats
+dom-kashmir-4n5d,5,https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=800,Alpine road
+grp-manali-3n4d,1,https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?w=800,Manali town view
+grp-manali-3n4d,2,https://images.unsplash.com/photo-1593181628554-868f7b3a874b?w=800,Mall road evening
+grp-manali-3n4d,3,https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800,Snowy peaks
+grp-manali-3n4d,4,https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800,Forest trail

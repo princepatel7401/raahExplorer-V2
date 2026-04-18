@@ -8,7 +8,7 @@ import type {
 } from "../types/site";
 import { fetchGoogleSheetCsv, getSheetCell } from "./googleSheetCsv";
 
-const SHEETS = ["TripsMaster", "TripPackages", "TripHotels", "TripItinerary", "TripDepartures"] as const;
+const SHEETS = ["TripsMaster", "TripPackages", "TripHotels", "TripItinerary", "TripDepartures", "TripGallery"] as const;
 
 type SheetName = (typeof SHEETS)[number];
 
@@ -45,12 +45,13 @@ function categorySafe(s: string): TripCategoryKey {
 }
 
 export async function fetchTripsFromGoogleSheet(spreadsheetId: string): Promise<Trip[]> {
-  const [master, packages, hotels, itinerary, departures] = await Promise.all([
+  const [master, packages, hotels, itinerary, departures, gallery] = await Promise.all([
     fetchCsv(spreadsheetId, "TripsMaster"),
     fetchCsv(spreadsheetId, "TripPackages"),
     fetchCsv(spreadsheetId, "TripHotels"),
     fetchCsv(spreadsheetId, "TripItinerary"),
-    fetchCsv(spreadsheetId, "TripDepartures")
+    fetchCsv(spreadsheetId, "TripDepartures"),
+    fetchCsv(spreadsheetId, "TripGallery")
   ]);
 
   const pkgByTrip = new Map<string, typeof packages>();
@@ -83,13 +84,15 @@ export async function fetchTripsFromGoogleSheet(spreadsheetId: string): Promise<
     const pk = get(r, "package_key", "packagekey");
     if (!tid || !pk) continue;
     const key = `${tid}::${pk}`;
+    const imageUrls = splitPipe(get(r, "image_urls", "images", "images_urls", "imageurls"));
     const day: TripItineraryDay = {
       day: parseIntSafe(get(r, "day_number", "day", "daynumber"), 1),
       title: get(r, "title"),
       summary: get(r, "summary", "description"),
       activities: splitPipe(get(r, "activities", "activity")),
       mealsIncluded: splitPipe(get(r, "meals_included", "meals", "mealsincluded")),
-      image: get(r, "image_url", "image", "imageurl")
+      // Allow multiple images in a pipe-separated column; first is used in UI/PDF today.
+      image: imageUrls[0] || get(r, "image_url", "image", "imageurl")
     };
     if (!daysBy.has(key)) daysBy.set(key, []);
     daysBy.get(key)!.push(day);
@@ -115,6 +118,15 @@ export async function fetchTripsFromGoogleSheet(spreadsheetId: string): Promise<
       pricePerPersonInr: po ? parseIntSafe(po) : undefined
     };
     list.push(dep);
+  }
+
+  const galleryByTrip = new Map<string, string[]>();
+  for (const r of gallery) {
+    const tid = get(r, "trip_id", "tripid", "id");
+    const url = get(r, "image_url", "image", "imageurl", "url");
+    if (!tid || !url) continue;
+    if (!galleryByTrip.has(tid)) galleryByTrip.set(tid, []);
+    galleryByTrip.get(tid)!.push(url);
   }
 
   const trips: Trip[] = [];
@@ -162,7 +174,7 @@ export async function fetchTripsFromGoogleSheet(spreadsheetId: string): Promise<
       durationNights: parseIntSafe(get(m, "duration_nights", "nights"), 0),
       startingPricePerPersonInr: starting,
       coverImage: get(m, "cover_image_url", "cover", "coverimage"),
-      gallery: splitPipe(get(m, "gallery_urls", "gallery", "galleryurls")),
+      gallery: galleryByTrip.get(id) ?? splitPipe(get(m, "gallery_urls", "gallery", "galleryurls")),
       highlights: splitPipe(get(m, "highlights")),
       includes: splitPipe(get(m, "includes")),
       excludes: splitPipe(get(m, "excludes")),
