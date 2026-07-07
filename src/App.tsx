@@ -19,6 +19,7 @@ const SPLASH_FLIGHT_MS = 5_000;
 
 function App() {
   const [showSplash, setShowSplash] = useState(true);
+  const [theme, setTheme] = useState<"dark" | "light">("light");
   const dismissed = useRef(false);
 
   const dismissSplash = useCallback(() => {
@@ -31,6 +32,10 @@ function App() {
     const t = window.setTimeout(dismissSplash, SPLASH_FLIGHT_MS);
     return () => window.clearTimeout(t);
   }, [dismissSplash]);
+
+  useEffect(() => {
+    document.documentElement.dataset.theme = theme;
+  }, [theme]);
 
   const onFlightAnimationEnd = useCallback(
     (e: AnimationEvent<SVGSVGElement>) => {
@@ -72,7 +77,13 @@ function App() {
       ) : null}
 
       <div className="page-shell">
-      <Header brand={siteContent.brand} nav={siteContent.nav} ctaLabel={siteContent.cta.buttonLabel} />
+      <Header
+        brand={siteContent.brand}
+        nav={siteContent.nav}
+        ctaLabel={siteContent.cta.buttonLabel}
+        theme={theme}
+        onToggleTheme={() => setTheme((t) => (t === "light" ? "dark" : "light"))}
+      />
 
       <main id="top">
         <HeroSection

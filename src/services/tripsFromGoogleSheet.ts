@@ -6,6 +6,7 @@ import type {
   TripItineraryDay,
   TripPackageBundle
 } from "../types/site";
+import { normalizeSheetDate } from "../lib/parseSheetDate";
 import { fetchGoogleSheetCsv, getSheetCell } from "./googleSheetCsv";
 
 const SHEETS = ["TripsMaster", "TripPackages", "TripHotels", "TripItinerary", "TripDepartures", "TripGallery"] as const;
@@ -111,8 +112,8 @@ export async function fetchTripsFromGoogleSheet(spreadsheetId: string): Promise<
     const depId = get(r, "departure_id", "departure id", "id");
     const dep: TripDeparture = {
       id: depId || `${tid}-dep-${list.length}`,
-      startDate: get(r, "start_date", "startdate", "start"),
-      endDate: get(r, "end_date", "enddate", "end"),
+      startDate: normalizeSheetDate(get(r, "start_date", "startdate", "start")),
+      endDate: normalizeSheetDate(get(r, "end_date", "enddate", "end")),
       groupTrip: parseBool(get(r, "group_trip", "grouptrip", "group")),
       seatsLeft: get(r, "seats_left", "seats", "seatsleft") ? parseIntSafe(get(r, "seats_left", "seats", "seatsleft")) : undefined,
       pricePerPersonInr: po ? parseIntSafe(po) : undefined

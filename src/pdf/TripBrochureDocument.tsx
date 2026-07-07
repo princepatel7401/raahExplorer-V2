@@ -1,5 +1,6 @@
 import { Document, Link, Page, StyleSheet, Text, View, pdf } from "@react-pdf/renderer";
 import type { Trip, TripDeparture, TripPackageBundle } from "../types/site";
+import { formatTripDate } from "../lib/parseSheetDate";
 import { registerBrochureFonts } from "./brochureFonts";
 
 const brand = {
@@ -94,11 +95,6 @@ function formatInr(amount: number) {
   return `Rs. ${amount.toLocaleString("en-IN")}`;
 }
 
-function formatDate(iso: string) {
-  const d = new Date(`${iso}T00:00:00`);
-  return d.toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" });
-}
-
 function departurePrice(pkg: TripPackageBundle, dep: TripDeparture) {
   return dep.pricePerPersonInr ?? pkg.pricePerPersonInr;
 }
@@ -167,7 +163,7 @@ export function TripBrochureDocument({ trip, pkg, brandName, generatedAt }: Trip
                   <Text style={styles.pkgBlockTitle}>Departures</Text>
                   {departuresAll.map((d) => (
                     <Text key={d.id} style={styles.pkgItem}>
-                      • {formatDate(d.startDate)}–{formatDate(d.endDate)} · {formatInr(departurePrice(pkg, d))}{" "}
+                      • {formatTripDate(d.startDate)}–{formatTripDate(d.endDate)} · {formatInr(departurePrice(pkg, d))}{" "}
                       {d.groupTrip ? "(Group)" : "(Private)"}
                     </Text>
                   ))}

@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import type { SiteContent, Trip, TripCategoryKey, TripDeparture, TripPackageBundle } from "../types/site";
 import { siteContent } from "../data/siteContent";
 import { CollageImage } from "./CollageImage";
+import { formatTripDate } from "../lib/parseSheetDate";
 
 interface TripsSectionProps {
   trips: SiteContent["trips"];
@@ -17,11 +18,6 @@ type TripDetailsState = { trip: Trip } | null;
 
 function formatInr(amount: number) {
   return `₹${amount.toLocaleString("en-IN")}`;
-}
-
-function formatDate(iso: string) {
-  const d = new Date(`${iso}T00:00:00`);
-  return d.toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" });
 }
 
 function CategoryIcon({ category }: { category: TripCategoryKey }) {
@@ -190,7 +186,7 @@ function TripDetailsModal({ state, onClose }: { state: TripDetailsState; onClose
                 <article key={d.id} className="departure-row">
                   <div>
                     <strong>
-                      {formatDate(d.startDate)} – {formatDate(d.endDate)}
+                      {formatTripDate(d.startDate)} – {formatTripDate(d.endDate)}
                     </strong>
                     <div className="trip-muted">
                       {d.groupTrip ? "Group trip" : "Private trip"}
