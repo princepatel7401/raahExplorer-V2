@@ -32,7 +32,7 @@ export function ItinerarySection({ itinerary }: { itinerary: SiteContent["itiner
           <img src={activeDay.image} alt={activeDay.title} />
         </div>
         <div className="itinerary-detail">
-          <p className="eyebrow">{activeDay.eyebrow}</p>
+          {/* <p className="eyebrow">{activeDay.eyebrow}</p> */}
           <h3>{activeDay.title}</h3>
           <p>{activeDay.description}</p>
           <ul className="detail-points">

@@ -303,9 +303,9 @@ export function TripsSection({ trips, tripsLoading, tripsError }: TripsSectionPr
 
   return (
     <section className="section section-trips" id="trips">
-      <div className="section-head">
+      <div className="section-head section-head--no-aside">
         <div>
-          <span className="eyebrow">{trips.eyebrow}</span>
+          {/* <span className="eyebrow">{trips.eyebrow}</span> */}
           <h2>{trips.title}</h2>
           {tripsLoading ? <p className="trips-sheet-status">Loading latest destinations…</p> : null}
           {tripsError ? (
@@ -314,7 +314,7 @@ export function TripsSection({ trips, tripsLoading, tripsError }: TripsSectionPr
             </p>
           ) : null}
         </div>
-        <p className="section-copy">{trips.copy}</p>
+        {/* <p className="section-copy">{trips.copy}</p> */}
       </div>
 
       <div className="trip-toolbar">

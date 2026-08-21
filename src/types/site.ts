@@ -142,13 +142,10 @@ export interface SiteContent {
   };
   nav: NavItem[];
   hero: {
-    eyebrow: string;
     title: string;
     text: string;
     primaryCta: string;
     secondaryCta: string;
-    /** Minimal caption above the tour collage (kept small in CSS) */
-    imageLabel: string;
     /** Ordered for grid: large tile first, then side stack, then bottom row */
     collage: Array<{ src: string; alt: string }>;
     metricCards: Metric[];

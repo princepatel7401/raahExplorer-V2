@@ -13,16 +13,15 @@ export function HeroSection({
     <section className="hero">
       <div className="hero-copy">
         <div className="hero-copy-main">
-          <p className="eyebrow">{hero.eyebrow}</p>
           <h1>{hero.title}</h1>
           <p className="hero-text">{hero.text}</p>
           <div className="hero-actions">
             <a className="btn btn-primary" href="#customize">
               {hero.primaryCta}
             </a>
-            <a className="btn btn-secondary" href="#itinerary">
+            {/* <a className="btn btn-secondary" href="#itinerary">
               {hero.secondaryCta}
-            </a>
+            </a> */}
           </div>
         </div>
         <div className="hero-metrics" aria-label="Key stats">
@@ -37,7 +36,6 @@ export function HeroSection({
 
       <div className="hero-visual">
         <div className="visual-card hero-visual-panel">
-          <p className="hero-collage-label">{hero.imageLabel}</p>
           <div className="hero-collage" role="img" aria-label="Tour destination collage">
             {hero.collage.map((item, i) => (
               <div className="hero-collage__cell" key={`${item.src}-${i}`}>

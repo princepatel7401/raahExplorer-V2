@@ -165,7 +165,7 @@ export function CustomizerSection({ customizer }: { customizer: SiteContent["cus
         </form>
 
         <div className="proposal-card">
-          <p className="eyebrow">{customizer.includedTitle}</p>
+          {/* <p className="eyebrow">{customizer.includedTitle}</p> */}
           <ul className="feature-list">
             {customizer.includedItems.map((item) => (
               <li key={item}>{item}</li>

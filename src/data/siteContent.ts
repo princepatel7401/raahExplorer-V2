@@ -9,18 +9,16 @@ export const siteContent: SiteContent = {
   nav: [
     { label: "Journeys", href: "#journeys" },
     { label: "Trips", href: "#trips" },
-    { label: "Itinerary", href: "#itinerary" },
+    // { label: "Itinerary", href: "#itinerary" },
     { label: "Gallery", href: "#gallery" },
     { label: "Q&A", href: "#faq" },
     { label: "Customize", href: "#customize" }
   ],
   hero: {
-    eyebrow: "Raah Explorer — Domestic, International, Group & Custom Trips",
     title: "Travel beyond packages with a smarter way to plan every journey.",
     text: "Raah Explorer creates premium domestic holidays, international escapes, curated group tours, and fully custom personal trips with detailed day-wise itinerary planning, stays, transport, experiences, and support from start to finish.",
     primaryCta: "Customize Your Trip",
     secondaryCta: "See Day-wise Plan",
-    imageLabel: "Himalayan valleys · beaches · cities — curated for you",
     collage: [
       { src: "/Himalaya/Himalaya-background.png", alt: "Himalayan valley at golden hour" },
       { src: "/Domestic Destinations Labels/himachal.webp", alt: "Himachal hills" },

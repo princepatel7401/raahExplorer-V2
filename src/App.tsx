@@ -2,7 +2,7 @@ import { Header } from "./components/Header";
 import { HeroSection } from "./components/HeroSection";
 import { JourneySection } from "./components/JourneySection";
 import { CustomizerSection } from "./components/CustomizerSection";
-import { ItinerarySection } from "./components/ItinerarySection";
+// import { ItinerarySection } from "./components/ItinerarySection";
 import { GallerySection } from "./components/GallerySection";
 import { TestimonialSection } from "./components/TestimonialSection";
 import { FaqSection } from "./components/FaqSection";
@@ -106,7 +106,7 @@ function App() {
         />
         <JourneySection journeys={siteContent.journeys} />
         <CustomizerSection customizer={siteContent.customizer} />
-        <ItinerarySection itinerary={siteContent.itinerary} />
+        {/* <ItinerarySection itinerary={siteContent.itinerary} /> */}
         <GallerySection gallery={siteContent.gallery} />
         <TestimonialSection testimonials={siteContent.testimonials} />
         <FaqSection faq={siteContent.faq} />
