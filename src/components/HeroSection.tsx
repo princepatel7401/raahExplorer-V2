@@ -105,21 +105,6 @@ export function HeroSection({ hero }: { hero: SiteContent["hero"] }) {
         </div>
       </div>
 
-      <a className="hero-scroll" href="#trips" aria-label="Scroll to destinations">
-        <span className="hero-scroll__label">Scroll</span>
-        <span className="hero-scroll__arrow" aria-hidden="true">
-          <svg viewBox="0 0 24 24">
-            <path
-              d="M12 5v12M7 13l5 5 5-5"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.75"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-        </span>
-      </a>
     </section>
   );
 }

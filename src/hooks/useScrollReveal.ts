@@ -5,7 +5,7 @@ const REVEAL_SELECTOR = [
   ".section-head h2",
   ".trust-strip__item",
   ".trip-toolbar",
-  ".trip-tab",
+  ".trip-arc__point",
   ".journey-card",
   ".gallery-collage-panel",
   ".gallery-collage__cell",
