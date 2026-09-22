@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState, type PointerEvent as ReactPointerEvent } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGlobeAsia, faHouseChimney, faUsers } from "@fortawesome/free-solid-svg-icons";
 import type { SiteContent, Trip, TripCategoryKey, TripDeparture, TripPackageBundle } from "../types/site";
@@ -287,9 +287,140 @@ function TripDetailsModal({ trip, onClose }: { trip: Trip; onClose: () => void }
 export function TripsSection({ trips, tripsLoading, tripsError }: TripsSectionProps) {
   const [active, setActive] = useState<TripCategoryKey>("international");
   const [details, setDetails] = useState<TripDetailsState>(null);
+  const [deckIndex, setDeckIndex] = useState(0);
+  const [dragX, setDragX] = useState(0);
+  const [isDragging, setIsDragging] = useState(false);
+  const [isFlying, setIsFlying] = useState(false);
+  const frameRef = useRef<HTMLDivElement>(null);
+  const swipeRef = useRef<{
+    pointerId: number | null;
+    startX: number;
+    startY: number;
+    axis: "none" | "x" | "y";
+    dragX: number;
+  }>({ pointerId: null, startX: 0, startY: 0, axis: "none", dragX: 0 });
 
   const filtered = useMemo(() => trips.trips.filter((t) => t.category === active), [active, trips.trips]);
   const activeLabel = useMemo(() => trips.categories.find((c) => c.key === active)?.label ?? "Trips", [active, trips.categories]);
+  const deckCount = filtered.length;
+
+  useEffect(() => {
+    setDeckIndex(0);
+    setDragX(0);
+    setIsDragging(false);
+    setIsFlying(false);
+    swipeRef.current = { pointerId: null, startX: 0, startY: 0, axis: "none", dragX: 0 };
+  }, [active, deckCount]);
+
+  const commitSwipe = (dir: -1 | 1) => {
+    const next = deckIndex + dir;
+    if (next < 0 || next >= deckCount || isFlying) {
+      setDragX(0);
+      setIsDragging(false);
+      return;
+    }
+    setIsFlying(true);
+    setIsDragging(false);
+    const distance = typeof window !== "undefined" ? Math.min(window.innerWidth, 720) : 480;
+    // Right swipe (dir +1 / next) flies right; left swipe (dir -1 / back) flies left
+    setDragX(dir === 1 ? distance : -distance);
+    window.setTimeout(() => {
+      setDeckIndex(next);
+      setDragX(0);
+      setIsFlying(false);
+    }, 280);
+  };
+
+  const onSwipePointerDown = (e: ReactPointerEvent<HTMLDivElement>) => {
+    if (e.button !== 0 || isFlying || deckCount < 1) return;
+    swipeRef.current = {
+      pointerId: e.pointerId,
+      startX: e.clientX,
+      startY: e.clientY,
+      axis: "none",
+      dragX: 0,
+    };
+  };
+
+  const onSwipePointerMove = (e: ReactPointerEvent<HTMLDivElement>) => {
+    const s = swipeRef.current;
+    if (s.pointerId !== e.pointerId || isFlying) return;
+    const dx = e.clientX - s.startX;
+    const dy = e.clientY - s.startY;
+
+    if (s.axis === "none") {
+      if (Math.abs(dx) < 10 && Math.abs(dy) < 10) return;
+      // Only lock to horizontal when the gesture is clearly a left/right swipe
+      if (Math.abs(dx) > Math.abs(dy) * 1.35) {
+        s.axis = "x";
+        setIsDragging(true);
+        try {
+          frameRef.current?.setPointerCapture(e.pointerId);
+        } catch {
+          /* ignore */
+        }
+      } else {
+        s.axis = "y";
+        return;
+      }
+    }
+    if (s.axis !== "x") return;
+
+    e.preventDefault();
+    const atStart = deckIndex <= 0;
+    const atEnd = deckIndex >= deckCount - 1;
+    let nextX = dx;
+    // Left = back (resist at start); right = next (resist at end)
+    if (atStart && nextX < 0) nextX *= 0.25;
+    if (atEnd && nextX > 0) nextX *= 0.25;
+    s.dragX = nextX;
+    setDragX(nextX);
+  };
+
+  const endSwipe = (e: ReactPointerEvent<HTMLDivElement>) => {
+    const s = swipeRef.current;
+    if (s.pointerId !== e.pointerId) return;
+    try {
+      if (frameRef.current?.hasPointerCapture(e.pointerId)) {
+        frameRef.current.releasePointerCapture(e.pointerId);
+      }
+    } catch {
+      /* already released */
+    }
+    const axis = s.axis;
+    const dx = s.dragX;
+    s.pointerId = null;
+    s.axis = "none";
+    s.dragX = 0;
+
+    if (axis === "y" || isFlying) return;
+
+    // Tap / click is handled by the front card button — just reset drag
+    if (axis === "none" || Math.abs(dx) < 12) {
+      setDragX(0);
+      setIsDragging(false);
+      return;
+    }
+
+    const threshold = 72;
+    // Swipe right → next; swipe left → back
+    if (dx >= threshold && deckIndex < deckCount - 1) {
+      commitSwipe(1);
+      return;
+    }
+    if (dx <= -threshold && deckIndex > 0) {
+      commitSwipe(-1);
+      return;
+    }
+    setDragX(0);
+    setIsDragging(false);
+  };
+
+  const openFrontDetails = () => {
+    if (isDragging || isFlying) return;
+    const trip = filtered[deckIndex];
+    if (trip) setDetails({ trip });
+  };
 
   return (
     <section className="section section-trips" id="trips">
@@ -322,36 +453,107 @@ export function TripsSection({ trips, tripsLoading, tripsError }: TripsSectionPr
       </div>
 
       <div
-        className="trip-rail-wrap"
+        className={`trip-deck${isDragging ? " is-swiping" : ""}${isFlying ? " is-flying" : ""}`}
         id="trip-category-panel"
         role="tabpanel"
         aria-labelledby={`trip-tab-${active}`}
+        aria-label={`${activeLabel} list. Swipe right for next, left to go back. Tap a card for details.`}
       >
-        <div className="trip-rail" aria-label={`${activeLabel} list`}>
-          {filtered.map((t) => (
-            <button
-              key={t.id}
-              type="button"
-              className="trip-card"
-              data-trip-card="true"
-              onClick={() => setDetails({ trip: t })}
-            >
-              <div className="trip-thumb">
-                <CollageImage src={t.coverImage} alt={t.title} loading="lazy" />
-              </div>
-              <div className="trip-card-body">
-                <strong>{t.title}</strong>
-                <span className="trip-muted">{t.location}</span>
-                <div className="trip-meta">
-                  <span>
-                    {t.durationDays}D/{t.durationNights}N
-                  </span>
-                  <span>{formatInr(t.startingPricePerPersonInr)} / person</span>
-                </div>
-              </div>
-            </button>
-          ))}
+        <div
+          ref={frameRef}
+          className="trip-deck__frame"
+          onPointerDown={onSwipePointerDown}
+          onPointerMove={onSwipePointerMove}
+          onPointerUp={endSwipe}
+          onPointerCancel={endSwipe}
+        >
+          <div className="trip-deck__stage">
+            {filtered.map((t, i) => {
+              const rel = i - deckIndex;
+              const odd = i % 2 === 1;
+              const isFront = rel === 0;
+              const exited = rel < 0;
+              const depth = Math.max(0, rel);
+              const fanX = !exited && !isFront ? (odd ? 16 : -16) * Math.min(depth, 4) : 0;
+              const fanRot = !exited && !isFront ? (odd ? 6 : -6) * Math.min(depth, 3) : 0;
+              const y = !exited && !isFront ? Math.min(depth, 5) * 10 : 0;
+              const scale = exited ? 0.94 : isFront ? 1 : Math.max(0.86, 1 - depth * 0.045);
+
+              let xPx = fanX;
+              let xPct = 0;
+              let rot = fanRot;
+              let opacity = 1;
+              if (exited) {
+                // Dismissed by swiping right → park off to the right
+                xPct = 120;
+                rot = 14;
+                opacity = 0;
+              } else if (isFront) {
+                xPx = dragX;
+                rot = dragX / 28;
+                opacity = Math.max(0.35, 1 - Math.abs(dragX) / 520);
+              } else if (depth > 5) {
+                opacity = 0;
+              }
+
+              const z = exited ? i : Math.floor(100 - depth);
+
+              return (
+                <article
+                  key={t.id}
+                  className={`trip-card trip-card--deck${odd ? " is-odd" : " is-even"}${isFront ? " is-front" : ""}${exited ? " is-exited" : ""}`}
+                  data-trip-card="true"
+                  aria-hidden={!isFront}
+                  style={{
+                    zIndex: z,
+                    opacity,
+                    transform: `translate3d(calc(${xPct}% + ${xPx}px), ${y}px, 0) rotate(${rot}deg) scale(${scale})`,
+                    pointerEvents: isFront ? "auto" : "none",
+                  }}
+                >
+                  <button
+                    type="button"
+                    className="trip-card__hit"
+                    aria-label={`View details for ${t.title}`}
+                    disabled={!isFront || isDragging || isFlying}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      openFrontDetails();
+                    }}
+                  >
+                    <div className="trip-thumb">
+                      <CollageImage src={t.coverImage} alt="" loading="lazy" />
+                    </div>
+                    <div className="trip-card-body">
+                      <strong>{t.title}</strong>
+                      <span className="trip-muted">{t.location}</span>
+                      <div className="trip-meta">
+                        <span>
+                          {t.durationDays}D/{t.durationNights}N
+                        </span>
+                        <span>{formatInr(t.startingPricePerPersonInr)} / person</span>
+                      </div>
+                    </div>
+                  </button>
+                </article>
+              );
+            })}
+          </div>
         </div>
+
+        {deckCount > 1 ? (
+          <div className="trip-deck__hint" aria-hidden="true">
+            Swipe right for next · left to go back
+          </div>
+        ) : null}
+
+        {deckCount > 1 ? (
+          <div className="trip-deck__dots" aria-hidden="true">
+            {filtered.map((t, i) => (
+              <span key={t.id} className={`trip-deck__dot${deckIndex === i ? " is-active" : ""}`} />
+            ))}
+          </div>
+        ) : null}
       </div>
 
       {details ? (

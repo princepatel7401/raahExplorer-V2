@@ -6,7 +6,6 @@ const REVEAL_SELECTOR = [
   ".trust-strip__item",
   ".trip-toolbar",
   ".trip-tab",
-  ".trip-card",
   ".journey-card",
   ".gallery-collage-panel",
   ".gallery-collage__cell",
