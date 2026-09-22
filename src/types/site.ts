@@ -135,6 +135,19 @@ export interface Trip {
   departures: TripDeparture[];
 }
 
+export interface CareerRole {
+  id: string;
+  title: string;
+  department: string;
+  location: string;
+  type: string;
+  experience: string;
+  summary: string;
+  responsibilities: string[];
+  requirements: string[];
+  perks: string[];
+}
+
 export interface SiteContent {
   brand: {
     name: string;
@@ -151,6 +164,14 @@ export interface SiteContent {
     metricCards: Metric[];
   };
   trustStrip: string[];
+  careers: {
+    eyebrow: string;
+    title: string;
+    copy: string;
+    intro: string;
+    applyEmail: string;
+    roles: CareerRole[];
+  };
   journeys: {
     eyebrow: string;
     title: string;

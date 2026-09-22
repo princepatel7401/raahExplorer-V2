@@ -11,6 +11,7 @@ export const siteContent: SiteContent = {
     { label: "Trips", href: "#trips" },
     // { label: "Itinerary", href: "#itinerary" },
     { label: "Gallery", href: "#gallery" },
+    { label: "Careers", href: "#careers" },
     { label: "Q&A", href: "#faq" },
     { label: "Customize", href: "#customize" }
   ],
@@ -40,6 +41,104 @@ export const siteContent: SiteContent = {
     "Domestic group departures",
     "Visa & travel support"
   ],
+  careers: {
+    eyebrow: "Careers",
+    title: "Build journeys with Raah Explorer",
+    copy: "Join a travel team that designs premium domestic and international experiences from Ahmedabad.",
+    intro:
+      "We are looking for people who care about planning, hospitality, and clear traveler communication. Every role helps craft trips that feel personal, reliable, and memorable.",
+    applyEmail: "info@raahexplorer.com",
+    roles: [
+      {
+        id: "travel-consultant",
+        title: "Travel Consultant",
+        department: "Sales & Planning",
+        location: "Ahmedabad (Thaltej)",
+        type: "Full-time",
+        experience: "1–3 years",
+        summary:
+          "Own traveler conversations from first enquiry to confirmed itinerary across domestic and international packages.",
+        responsibilities: [
+          "Respond to leads on WhatsApp, calls, and email with clear package options",
+          "Build day-wise itineraries with stays, transfers, and activity suggestions",
+          "Coordinate quotes, revisions, and booking confirmations",
+          "Maintain CRM notes and follow up until trip departure"
+        ],
+        requirements: [
+          "Strong spoken English and Hindi (Gujarati is a plus)",
+          "Comfortable with destination research and pricing logic",
+          "Organized, responsive, and traveler-first communication"
+        ],
+        perks: ["Performance incentives", "Travel product training", "Hybrid flexibility after probation"]
+      },
+      {
+        id: "operations-executive",
+        title: "Trip Operations Executive",
+        department: "Operations",
+        location: "Ahmedabad (Thaltej)",
+        type: "Full-time",
+        experience: "2–4 years",
+        summary:
+          "Make sure every confirmed trip runs smoothly — hotels, cabs, vouchers, and on-ground coordination.",
+        responsibilities: [
+          "Confirm hotels, transfers, and activity vouchers for booked trips",
+          "Share traveler documents and day-wise operational briefs",
+          "Handle last-minute changes with suppliers and travelers",
+          "Track supplier quality and escalate issues quickly"
+        ],
+        requirements: [
+          "Prior travel operations or hospitality experience preferred",
+          "Detail-oriented with calm problem solving under time pressure",
+          "Working knowledge of Excel / Google Sheets"
+        ],
+        perks: ["Supplier network exposure", "Festival bonuses", "Team travel familiarization trips"]
+      },
+      {
+        id: "digital-marketing",
+        title: "Digital Marketing Associate",
+        department: "Growth",
+        location: "Ahmedabad / Hybrid",
+        type: "Full-time",
+        experience: "1–3 years",
+        summary:
+          "Grow Raah Explorer’s reach with content, campaigns, and conversion-focused social storytelling.",
+        responsibilities: [
+          "Plan and publish Instagram / YouTube content calendars",
+          "Run Meta ads for destination campaigns and lead capture",
+          "Track enquiry quality and campaign ROI weekly",
+          "Collaborate with planning team for authentic trip creatives"
+        ],
+        requirements: [
+          "Hands-on Meta Ads and Instagram Reels experience",
+          "Basic analytics literacy (CTR, CPL, conversion)",
+          "Strong visual sense for travel storytelling"
+        ],
+        perks: ["Creative freedom", "Tool budgets", "Portfolio-building campaigns"]
+      },
+      {
+        id: "intern-planner",
+        title: "Travel Planning Intern",
+        department: "Planning",
+        location: "Ahmedabad (Office)",
+        type: "Internship (3–6 months)",
+        experience: "Fresher / student",
+        summary:
+          "Learn itinerary design, destination research, and traveler communication beside senior consultants.",
+        responsibilities: [
+          "Research hotels, routes, and activity options for open enquiries",
+          "Draft first-pass itineraries for review",
+          "Support brochure and trip-detail documentation",
+          "Assist with traveler follow-ups and checklist prep"
+        ],
+        requirements: [
+          "Interest in travel products and customer service",
+          "Good writing skills and willingness to learn tools quickly",
+          "Available for in-office hours in Ahmedabad"
+        ],
+        perks: ["Stipend", "Mentorship", "PPO opportunity based on performance"]
+      }
+    ]
+  },
   journeys: {
     eyebrow: "Journey Formats",
     title: "Trips built around the kind of explorer you are",
@@ -246,7 +345,7 @@ export const siteContent: SiteContent = {
       { label: "Home", href: "#top" },
       { label: "Tours", href: "#journeys" },
       { label: "Gallery", href: "#gallery" },
-      { label: "About Us", href: "#faq" },
+      { label: "Careers", href: "#careers" },
       { label: "Contact", href: "#customize" }
     ],
     tripLinks: [

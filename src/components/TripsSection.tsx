@@ -1,4 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faGlobeAsia, faHouseChimney, faUsers } from "@fortawesome/free-solid-svg-icons";
 import type { SiteContent, Trip, TripCategoryKey, TripDeparture, TripPackageBundle } from "../types/site";
 import { siteContent } from "../data/siteContent";
 import { CollageImage } from "./CollageImage";
@@ -23,32 +25,11 @@ function formatInr(amount: number) {
 function CategoryIcon({ category }: { category: TripCategoryKey }) {
   switch (category) {
     case "international":
-      return (
-        <svg viewBox="0 0 24 24" aria-hidden="true">
-          <path
-            fill="currentColor"
-            d="M12 2a10 10 0 1 0 .001 20.001A10 10 0 0 0 12 2Zm7.9 9h-3.12a16.3 16.3 0 0 0-1.1-5 8.03 8.03 0 0 1 4.22 5ZM12 4c1.04 0 2.62 2.33 3.23 7H8.77C9.38 6.33 10.96 4 12 4ZM4.1 13h3.12a16.3 16.3 0 0 0 1.1 5A8.03 8.03 0 0 1 4.1 13Zm3.12-2H4.1a8.03 8.03 0 0 1 4.22-5 16.3 16.3 0 0 0-1.1 5ZM12 20c-1.04 0-2.62-2.33-3.23-7h6.46C14.62 17.67 13.04 20 12 20Zm3.68-2a16.3 16.3 0 0 0 1.1-5h3.12a8.03 8.03 0 0 1-4.22 5Z"
-          />
-        </svg>
-      );
+      return <FontAwesomeIcon icon={faGlobeAsia} />;
     case "domestic":
-      return (
-        <svg viewBox="0 0 24 24" aria-hidden="true">
-          <path
-            fill="currentColor"
-            d="M12 2 3 9v13h6v-7h6v7h6V9l-9-7Zm7 18h-2v-7H7v7H5V10l7-5.44L19 10v10Z"
-          />
-        </svg>
-      );
+      return <FontAwesomeIcon icon={faHouseChimney} />;
     case "group":
-      return (
-        <svg viewBox="0 0 24 24" aria-hidden="true">
-          <path
-            fill="currentColor"
-            d="M16 11a4 4 0 1 0-3.2-6.4A4 4 0 0 0 16 11Zm-8 0a4 4 0 1 0-4-4 4 4 0 0 0 4 4Zm8 2c-2.67 0-8 1.34-8 4v3h16v-3c0-2.66-5.33-4-8-4ZM8 13c-.38 0-.8.02-1.24.06C4.08 13.3 2 14.4 2 17v3h5v-3c0-1.56.7-2.66 1.78-3.44A12.5 12.5 0 0 0 8 13Z"
-          />
-        </svg>
-      );
+      return <FontAwesomeIcon icon={faUsers} />;
     default:
       return null;
   }
@@ -84,15 +65,24 @@ function CategoryTab({
   );
 }
 
-function TripDetailsModal({ state, onClose }: { state: TripDetailsState; onClose: () => void }) {
-  if (!state) return null;
-  const trip = state.trip;
+function TripDetailsModal({ trip, onClose }: { trip: Trip; onClose: () => void }) {
   const [pkgKey, setPkgKey] = useState(trip.defaultPackageKey);
   const [pdfBusy, setPdfBusy] = useState(false);
 
   useEffect(() => {
     setPkgKey(trip.defaultPackageKey);
   }, [trip.id, trip.defaultPackageKey]);
+
+  useEffect(() => {
+    const prevOverflow = document.body.style.overflow;
+    const prevTouch = document.body.style.touchAction;
+    document.body.style.overflow = "hidden";
+    document.body.style.touchAction = "none";
+    return () => {
+      document.body.style.overflow = prevOverflow;
+      document.body.style.touchAction = prevTouch;
+    };
+  }, []);
 
   const pkg = useMemo(
     () => trip.packages.find((p) => p.key === pkgKey) ?? trip.packages[0]!,
@@ -364,7 +354,9 @@ export function TripsSection({ trips, tripsLoading, tripsError }: TripsSectionPr
         </div>
       </div>
 
-      <TripDetailsModal state={details} onClose={() => setDetails(null)} />
+      {details ? (
+        <TripDetailsModal trip={details.trip} onClose={() => setDetails(null)} />
+      ) : null}
     </section>
   );
 }

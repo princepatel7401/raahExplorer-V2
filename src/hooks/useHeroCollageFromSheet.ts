@@ -42,7 +42,7 @@ export function useHeroCollageFromSheet(hero: SiteContent["hero"]): HeroCollageS
           setCollage(fallbackCollageRef.current);
           setSource("fallback");
           setError(
-            "Default hero photos are shown — no collage rows loaded from Google Sheets. Add tab HeroCollage (see public/sheet-templates/HeroCollage.csv) or set VITE_GOOGLE_HERO_COLLAGE_SHEET_NAME. Check the browser console for details."
+            "Default gallery photos are shown — no collage rows loaded from Google Sheets. Add tab HeroCollage (see public/sheet-templates/HeroCollage.csv) or set VITE_GOOGLE_HERO_COLLAGE_SHEET_NAME. Check the browser console for details."
           );
         }
         setLoading(false);

@@ -3,7 +3,7 @@ export const SITE_URL = "https://www.raahexplorer.com";
 
 /** Keep in sync with `index.html` <title> and meta for consistency */
 export const seoDefaults = {
-  title: "Raah Explorer — Tour & Travel Packages in Ahmedabad | Domestic & International Trips",
+  title: "Raah Explorer Tour & Travel Packages in Ahmedabad | Domestic & International Trips",
   description:
     "Raah Explorer is a leading Ahmedabad travel agency for tour packages & travel packages across India and abroad. Book domestic tours, international holidays, honeymoons, private & group trips, hotels, villas, flights, trains & buses — planned by Raah Explorer from Thaltej, Ahmedabad.",
   keywords: [

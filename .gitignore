@@ -2,3 +2,5 @@ node_modules/
 .env.local
 dist/
 build/
+.tmp-frames/
+public/videos/*.original.mp4
