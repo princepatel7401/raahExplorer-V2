@@ -6235,19 +6235,44 @@ html.is-admin-open body {
   text-overflow: ellipsis;
 }
 .promo-teaser__chev {
-  font-size: 1.35rem;
-  font-weight: 400;
-  opacity: 0.55;
-  transform: translateX(0);
-  transition: transform 220ms ease, opacity 220ms ease;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  opacity: 0.7;
+  white-space: nowrap;
+  padding: 6px 9px;
+  border-radius: 999px;
+  background: rgb(var(--neon-rgb) / 0.2);
+  color: rgb(var(--neon-rgb) / 1);
+  transition: transform 220ms ease, opacity 220ms ease, background 220ms ease;
 }
 .promo-teaser__hit:hover .promo-teaser__chev,
 .promo-teaser__hit:focus-visible .promo-teaser__chev {
   opacity: 1;
-  transform: translateX(3px);
+  transform: translateX(2px);
+  background: rgb(var(--neon-rgb) / 0.32);
 }
-.promo-teaser__dismiss {
-  display: none;
+.promo-teaser__deal {
+  display: grid;
+  place-items: center;
+  min-width: 58px;
+  height: 48px;
+  padding: 0 8px;
+  border-radius: 12px;
+  background: linear-gradient(145deg, rgb(var(--neon-rgb) / 1), rgb(var(--neon-rgb) / 0.72));
+  color: #fff;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  line-height: 1.1;
+  text-align: center;
+  box-shadow: 0 6px 16px rgb(var(--neon-rgb) / 0.35);
+  animation: promoDealBounce 1.8s ease-in-out infinite;
+}
+@keyframes promoDealBounce {
+  0%, 100% { transform: scale(1) rotate(-2deg); }
+  50% { transform: scale(1.06) rotate(2deg); }
 }
 
 [data-theme="light"] .promo-teaser {
@@ -6271,7 +6296,7 @@ html.is-admin-open body {
 .promo-popup {
   position: fixed;
   inset: 0;
-  z-index: 120;
+  z-index: 250;
   display: grid;
   align-items: end;
   justify-items: center;
@@ -6284,7 +6309,7 @@ html.is-admin-open body {
   margin: 0;
   border: 0;
   padding: 0;
-  background: rgb(4 8 6 / 0.55);
+  background: rgb(4 8 6 / 0.58);
   opacity: 0;
   cursor: pointer;
   pointer-events: auto;
@@ -6353,7 +6378,7 @@ html.is-admin-open body {
   position: absolute;
   top: 12px;
   right: 12px;
-  z-index: 2;
+  z-index: 3;
   width: 36px;
   height: 36px;
   border: 0;
@@ -6373,6 +6398,12 @@ html.is-admin-open body {
   animation: promoMediaIn 620ms cubic-bezier(0.22, 1, 0.36, 1) both;
   animation-delay: 80ms;
 }
+.promo-popup__media-shade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 35%, rgb(0 0 0 / 0.45) 100%);
+  pointer-events: none;
+}
 .promo-popup.is-in .promo-popup__media img {
   animation: promoKen 9s ease-in-out infinite alternate;
 }
@@ -6389,6 +6420,68 @@ html.is-admin-open body {
 @keyframes promoKen {
   from { transform: scale(1); }
   to { transform: scale(1.06); }
+}
+
+.promo-popup__stamp {
+  position: absolute;
+  right: 14px;
+  bottom: 14px;
+  width: 108px;
+  height: 108px;
+  display: grid;
+  place-items: center;
+  transform: rotate(-12deg) scale(0.4);
+  opacity: 0;
+}
+.promo-popup.is-in .promo-popup__stamp {
+  animation: promoStampIn 700ms cubic-bezier(0.22, 1.4, 0.36, 1) 180ms both;
+}
+.promo-popup__stamp--solo {
+  position: relative;
+  right: auto;
+  bottom: auto;
+}
+.promo-popup__hero-deal {
+  display: grid;
+  place-items: center;
+  padding: 28px 20px 8px;
+}
+.promo-popup__stamp-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  border: 3px dashed rgb(255 255 255 / 0.85);
+  background: rgb(var(--neon-rgb) / 0.92);
+  box-shadow:
+    0 10px 28px rgb(0 0 0 / 0.35),
+    inset 0 0 0 6px rgb(255 255 255 / 0.12);
+  animation: promoStampSpin 10s linear infinite;
+}
+.promo-popup__stamp-text {
+  position: relative;
+  z-index: 1;
+  max-width: 78px;
+  text-align: center;
+  color: #fff;
+  font-size: 1.05rem;
+  font-weight: 850;
+  letter-spacing: 0.02em;
+  line-height: 1.1;
+  text-shadow: 0 2px 8px rgb(0 0 0 / 0.25);
+  animation: promoStampPulse 1.7s ease-in-out infinite;
+}
+@keyframes promoStampIn {
+  0% { opacity: 0; transform: rotate(-40deg) scale(0.2); }
+  70% { opacity: 1; transform: rotate(-8deg) scale(1.08); }
+  100% { opacity: 1; transform: rotate(-12deg) scale(1); }
+}
+@keyframes promoStampSpin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+@keyframes promoStampPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.06); }
 }
 
 .promo-popup__badge,
@@ -6414,8 +6507,8 @@ html.is-admin-open body {
 
 .promo-popup__body {
   display: grid;
-  gap: 10px;
-  padding: 16px 20px calc(18px + env(safe-area-inset-bottom, 0px));
+  gap: 8px;
+  padding: 16px 20px calc(22px + env(safe-area-inset-bottom, 0px));
   animation: promoBodyIn 560ms cubic-bezier(0.22, 1, 0.36, 1) both;
   animation-delay: 140ms;
 }
@@ -6423,43 +6516,26 @@ html.is-admin-open body {
   from { opacity: 0; transform: translateY(16px); }
   to { opacity: 1; transform: translateY(0); }
 }
+.promo-popup__kind {
+  margin: 0;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgb(var(--neon-rgb) / 0.95);
+}
 .promo-popup__title {
   margin: 0;
-  font-size: clamp(1.35rem, 5vw, 1.7rem);
-  font-weight: 700;
+  font-size: clamp(1.4rem, 5.2vw, 1.85rem);
+  font-weight: 750;
   letter-spacing: -0.03em;
   line-height: 1.15;
 }
 .promo-popup__copy {
-  margin: 0;
+  margin: 2px 0 0;
   font-size: 0.95rem;
   line-height: 1.55;
   color: rgb(255 255 255 / 0.72);
-}
-.promo-popup__actions {
-  display: grid;
-  gap: 8px;
-  margin-top: 6px;
-}
-.promo-popup__cta {
-  display: grid;
-  place-items: center;
-  min-height: 48px;
-  border-radius: 999px;
-  background: rgb(var(--neon-rgb) / 0.95);
-  color: #fff;
-  text-decoration: none;
-  font-weight: 650;
-  box-shadow: 0 10px 24px rgb(0 0 0 / 0.28);
-}
-.promo-popup__later {
-  min-height: 42px;
-  border: 0;
-  border-radius: 999px;
-  background: transparent;
-  color: rgb(255 255 255 / 0.7);
-  font: inherit;
-  cursor: pointer;
 }
 
 @media (min-width: 761px) {
@@ -6494,9 +6570,6 @@ html.is-admin-open body {
 [data-theme="light"] .promo-popup__copy {
   color: rgb(20 32 24 / 0.68);
 }
-[data-theme="light"] .promo-popup__later {
-  color: rgb(20 32 24 / 0.55);
-}
 [data-theme="light"] .promo-popup__close {
   background: rgb(0 0 0 / 0.08);
   color: #142018;
@@ -6508,13 +6581,22 @@ html.is-admin-open body {
 @media (prefers-reduced-motion: reduce) {
   .promo-teaser,
   .promo-teaser.is-in,
+  .promo-teaser__deal,
   .promo-popup__backdrop,
   .promo-popup__sheet,
   .promo-popup__media,
   .promo-popup__body,
-  .promo-popup.is-in .promo-popup__sheet {
+  .promo-popup__stamp,
+  .promo-popup__stamp-ring,
+  .promo-popup__stamp-text,
+  .promo-popup.is-in .promo-popup__sheet,
+  .promo-popup.is-in .promo-popup__stamp {
     animation: none !important;
     transition: none !important;
+  }
+  .promo-popup.is-in .promo-popup__stamp {
+    opacity: 1;
+    transform: rotate(-12deg) scale(1);
   }
 }
 

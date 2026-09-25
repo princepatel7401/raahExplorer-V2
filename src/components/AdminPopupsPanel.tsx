@@ -4,8 +4,8 @@ import { emptyPromoPopup } from "../hooks/useLocalPopups";
 import { AdminSelect, type AdminSelectOption } from "./AdminSelect";
 
 const KIND_OPTIONS: AdminSelectOption[] = [
-  { value: "festival", label: "Festival offer", hint: "Shows until dismissed", tone: "international" },
-  { value: "daily", label: "Daily update", hint: "Can return next day", tone: "domestic" },
+  { value: "festival", label: "Festival offer", hint: "Always on while enabled", tone: "international" },
+  { value: "daily", label: "Daily update", hint: "Daily highlight", tone: "domestic" },
 ];
 
 interface AdminPopupsPanelProps {
@@ -48,7 +48,7 @@ export function AdminPopupsPanel({ popups, onChange }: AdminPopupsPanelProps) {
           </button>
         </div>
         <p className="admin-muted admin-popups__hint">
-          Festival offers & daily updates shown on the site after load.
+          Offer chip on the site — tap for image & details.
         </p>
         <ul className="admin-list__items">
           {popups.map((p) => (
@@ -58,7 +58,7 @@ export function AdminPopupsPanel({ popups, onChange }: AdminPopupsPanelProps) {
                 className={`admin-list__item${p.id === selected?.id ? " is-active" : ""}`}
                 onClick={() => setSelectedId(p.id)}
               >
-                <strong>{p.title || "Untitled"}</strong>
+                <strong>{p.highlight || p.title || "Untitled"}</strong>
                 <span>
                   {p.kind === "festival" ? "Festival" : "Daily"}
                   {p.enabled ? " · On" : " · Off"}
@@ -102,21 +102,30 @@ export function AdminPopupsPanel({ popups, onChange }: AdminPopupsPanelProps) {
               </label>
 
               <label>
+                Offer tag
+                <input
+                  value={selected.highlight}
+                  onChange={(e) => patch({ highlight: e.target.value })}
+                  placeholder="5% OFF"
+                />
+              </label>
+
+              <label>
                 Title
                 <input
                   value={selected.title}
                   onChange={(e) => patch({ title: e.target.value })}
-                  placeholder="Diwali getaway offer"
+                  placeholder="5% off on booking"
                 />
               </label>
 
               <label className="admin-grid__full">
-                Message
+                Details
                 <textarea
                   rows={3}
                   value={selected.message}
                   onChange={(e) => patch({ message: e.target.value })}
-                  placeholder="Short offer or daily update copy"
+                  placeholder="Short offer details"
                 />
               </label>
 
@@ -126,24 +135,6 @@ export function AdminPopupsPanel({ popups, onChange }: AdminPopupsPanelProps) {
                   value={selected.imageUrl}
                   onChange={(e) => patch({ imageUrl: e.target.value })}
                   placeholder="/International Destinations Labels/maldives.webp"
-                />
-              </label>
-
-              <label>
-                Button label
-                <input
-                  value={selected.ctaLabel}
-                  onChange={(e) => patch({ ctaLabel: e.target.value })}
-                  placeholder="Book now"
-                />
-              </label>
-
-              <label>
-                Button link
-                <input
-                  value={selected.ctaHref}
-                  onChange={(e) => patch({ ctaHref: e.target.value })}
-                  placeholder="#trips or WhatsApp URL"
                 />
               </label>
 

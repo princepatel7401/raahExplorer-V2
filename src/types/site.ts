@@ -77,11 +77,11 @@ export interface PromoPopup {
   id: string;
   enabled: boolean;
   kind: PromoPopupKind;
+  /** Big animated line, e.g. "5% OFF" */
+  highlight: string;
   title: string;
   message: string;
   imageUrl: string;
-  ctaLabel: string;
-  ctaHref: string;
   /** YYYY-MM-DD inclusive; empty = no start limit */
   startDate: string;
   /** YYYY-MM-DD inclusive; empty = no end limit */

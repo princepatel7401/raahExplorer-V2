@@ -4,7 +4,6 @@ import type { PromoPopup } from "../types/site";
 
 interface SitePromoPopupProps {
   popup: PromoPopup;
-  onClose?: () => void;
 }
 
 type PromoPhase = "teaser" | "detail";
@@ -45,7 +44,8 @@ export function SitePromoPopup({ popup }: SitePromoPopupProps) {
   const openDetail = () => setPhase("detail");
 
   const kindLabel = popup.kind === "festival" ? "Festival offer" : "Today’s update";
-  const shortTitle = popup.title.length > 42 ? `${popup.title.slice(0, 40)}…` : popup.title;
+  const teaserLine = popup.highlight || popup.title;
+  const shortLine = teaserLine.length > 36 ? `${teaserLine.slice(0, 34)}…` : teaserLine;
 
   return createPortal(
     <>
@@ -55,7 +55,11 @@ export function SitePromoPopup({ popup }: SitePromoPopupProps) {
         aria-label={kindLabel}
       >
         <button type="button" className="promo-teaser__hit" onClick={openDetail} aria-expanded={phase === "detail"}>
-          {popup.imageUrl ? (
+          {popup.highlight ? (
+            <span className="promo-teaser__deal" aria-hidden="true">
+              {popup.highlight}
+            </span>
+          ) : popup.imageUrl ? (
             <span className="promo-teaser__thumb">
               <img src={popup.imageUrl} alt="" loading="eager" decoding="async" />
             </span>
@@ -64,10 +68,10 @@ export function SitePromoPopup({ popup }: SitePromoPopupProps) {
           )}
           <span className="promo-teaser__text">
             <span className="promo-teaser__kicker">{kindLabel}</span>
-            <span className="promo-teaser__title">{shortTitle}</span>
+            <span className="promo-teaser__title">{shortLine}</span>
           </span>
           <span className="promo-teaser__chev" aria-hidden="true">
-            ›
+            Details
           </span>
         </button>
       </div>
@@ -95,7 +99,22 @@ export function SitePromoPopup({ popup }: SitePromoPopupProps) {
             {popup.imageUrl ? (
               <div className="promo-popup__media">
                 <img src={popup.imageUrl} alt="" loading="eager" decoding="async" />
-                <span className="promo-popup__badge">{kindLabel}</span>
+                <div className="promo-popup__media-shade" aria-hidden="true" />
+                {popup.highlight ? (
+                  <div className="promo-popup__stamp" aria-hidden="true">
+                    <span className="promo-popup__stamp-ring" />
+                    <span className="promo-popup__stamp-text">{popup.highlight}</span>
+                  </div>
+                ) : (
+                  <span className="promo-popup__badge">{kindLabel}</span>
+                )}
+              </div>
+            ) : popup.highlight ? (
+              <div className="promo-popup__hero-deal">
+                <div className="promo-popup__stamp promo-popup__stamp--solo" aria-hidden="true">
+                  <span className="promo-popup__stamp-ring" />
+                  <span className="promo-popup__stamp-text">{popup.highlight}</span>
+                </div>
               </div>
             ) : (
               <div className="promo-popup__badge-row">
@@ -104,20 +123,11 @@ export function SitePromoPopup({ popup }: SitePromoPopupProps) {
             )}
 
             <div className="promo-popup__body">
+              <p className="promo-popup__kind">{kindLabel}</p>
               <h2 id={titleId} className="promo-popup__title">
                 {popup.title}
               </h2>
               {popup.message ? <p className="promo-popup__copy">{popup.message}</p> : null}
-              <div className="promo-popup__actions">
-                {popup.ctaHref && popup.ctaLabel ? (
-                  <a className="promo-popup__cta" href={popup.ctaHref} onClick={collapseDetail}>
-                    {popup.ctaLabel}
-                  </a>
-                ) : null}
-                <button type="button" className="promo-popup__later" onClick={collapseDetail}>
-                  Close
-                </button>
-              </div>
             </div>
           </div>
         </div>

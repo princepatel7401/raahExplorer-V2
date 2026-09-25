@@ -1,18 +1,17 @@
 import { useCallback, useEffect, useState } from "react";
 import type { PromoPopup } from "../types/site";
 
-const STORAGE_KEY = "raah-popups-v2";
+const STORAGE_KEY = "raah-popups-v3";
 
 const defaultPopups: PromoPopup[] = [
   {
     id: "promo-festival-sample",
     enabled: true,
     kind: "festival",
-    title: "Festival Escape Offer",
-    message: "Celebrate the season with curated getaways — limited festive departures with special stays.",
+    highlight: "5% OFF",
+    title: "5% off on booking",
+    message: "Book any trip this festival season and enjoy an instant 5% discount on your package.",
     imageUrl: "/International Destinations Labels/maldives.webp",
-    ctaLabel: "Explore offers",
-    ctaHref: "#trips",
     startDate: "",
     endDate: "",
   },
@@ -22,29 +21,37 @@ function clone<T>(v: T): T {
   return JSON.parse(JSON.stringify(v)) as T;
 }
 
+function normalizePopup(raw: Record<string, unknown>): PromoPopup {
+  return {
+    id: String(raw.id ?? `promo-${Date.now()}`),
+    enabled: Boolean(raw.enabled),
+    kind: raw.kind === "daily" ? "daily" : "festival",
+    highlight: String(raw.highlight ?? ""),
+    title: String(raw.title ?? ""),
+    message: String(raw.message ?? ""),
+    imageUrl: String(raw.imageUrl ?? ""),
+    startDate: String(raw.startDate ?? ""),
+    endDate: String(raw.endDate ?? ""),
+  };
+}
+
 function loadPopups(): PromoPopup[] {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) {
-      // Migrate from v1 if present
-      const legacy = localStorage.getItem("raah-popups-v1");
-      if (legacy) {
-        const parsed = JSON.parse(legacy) as unknown;
-        if (Array.isArray(parsed) && parsed.length) {
-          const list = parsed as PromoPopup[];
-          // Ensure at least one enabled so the teaser is visible
-          if (!list.some((p) => p.enabled)) {
-            list[0] = { ...list[0], enabled: true };
-          }
-          localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
-          return list;
-        }
-      }
-      return clone(defaultPopups);
-    }
+    const raw =
+      localStorage.getItem(STORAGE_KEY) ??
+      localStorage.getItem("raah-popups-v2") ??
+      localStorage.getItem("raah-popups-v1");
+    if (!raw) return clone(defaultPopups);
     const parsed = JSON.parse(raw) as unknown;
     if (!Array.isArray(parsed) || !parsed.length) return clone(defaultPopups);
-    return parsed as PromoPopup[];
+    const list = (parsed as Record<string, unknown>[]).map(normalizePopup);
+    if (!list.some((p) => p.enabled)) list[0] = { ...list[0], enabled: true };
+    return list.map((p) => {
+      if (p.id === "promo-festival-sample" && !p.highlight) {
+        return { ...clone(defaultPopups[0]), enabled: p.enabled !== false };
+      }
+      return p;
+    });
   } catch {
     return clone(defaultPopups);
   }
@@ -82,11 +89,10 @@ export function emptyPromoPopup(): PromoPopup {
     id: `promo-${Date.now()}`,
     enabled: true,
     kind: "festival",
-    title: "New offer",
+    highlight: "5% OFF",
+    title: "5% off on booking",
     message: "",
     imageUrl: "",
-    ctaLabel: "Learn more",
-    ctaHref: "#trips",
     startDate: "",
     endDate: "",
   };
@@ -104,7 +110,7 @@ export function isPopupActiveNow(p: PromoPopup, today = todayIso()): boolean {
   if (!p.enabled) return false;
   if (p.startDate && today < p.startDate) return false;
   if (p.endDate && today > p.endDate) return false;
-  return Boolean(p.title.trim() || p.message.trim() || p.imageUrl.trim());
+  return Boolean(p.title.trim() || p.message.trim() || p.imageUrl.trim() || p.highlight.trim());
 }
 
 export function pickActivePopup(popups: PromoPopup[]): PromoPopup | null {
