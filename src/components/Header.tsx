@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMoon, faSun } from "@fortawesome/free-solid-svg-icons";
 import type { SiteContent } from "../types/site";
@@ -25,24 +25,12 @@ export function Header({
 }: HeaderProps) {
   const navHrefs = useMemo(() => nav.map((item) => item.href), [nav]);
   const activeHref = useActiveNavHref(navHrefs);
-  const [scrolled, setScrolled] = useState(false);
   const isDestination = variant === "destination";
   const ctaExternal = /^https?:\/\//.test(ctaHref) || ctaHref.startsWith("mailto:") || ctaHref.startsWith("tel:");
 
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 24);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
   return (
     <header
-      className={[
-        "site-header",
-        isDestination ? "site-header--destination" : "",
-        scrolled ? "is-scrolled" : "",
-      ]
+      className={["site-header", isDestination ? "site-header--destination" : ""]
         .filter(Boolean)
         .join(" ")}
     >

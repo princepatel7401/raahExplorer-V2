@@ -15,8 +15,14 @@ import { Footer } from "./components/Footer";
 import { TrustStripItemContent } from "./components/TrustStripIcons";
 import { siteContent } from "./data/siteContent";
 import { useLocalDestinations } from "./hooks/useLocalDestinations";
+import {
+  pickActivePopup,
+  useLocalPopups,
+} from "./hooks/useLocalPopups";
 import { useScrollReveal } from "./hooks/useScrollReveal";
+import { SitePromoPopup } from "./components/SitePromoPopup";
 import { useEffect, useMemo, useState } from "react";
+import type { PromoPopup } from "./types/site";
 
 /** Succession: logo pop → hold → exit → site enter. */
 const SPLASH_POP_MS = 900;
@@ -43,8 +49,11 @@ function App() {
     typeof window !== "undefined" ? parseHash(window.location.hash) : { page: "home" as AppPage, destinationId: null }
   );
   const [trustTip, setTrustTip] = useState<string | null>(null);
+  const [promo, setPromo] = useState<PromoPopup | null>(null);
 
   const page = route.page;
+  const localDestinations = useLocalDestinations();
+  const localPopups = useLocalPopups();
 
   useEffect(() => {
     const timers = [
@@ -83,8 +92,16 @@ function App() {
 
   const showSplash = splashPhase !== "done" && page !== "admin";
   const siteRevealing = splashPhase === "exit" || splashPhase === "done" || page === "admin";
-  const localDestinations = useLocalDestinations();
   useScrollReveal(splashPhase === "done" && page === "home", `${localDestinations.destinations.length}`);
+
+  useEffect(() => {
+    if (page === "admin") {
+      setPromo(null);
+      return;
+    }
+    if (splashPhase !== "done") return;
+    setPromo(pickActivePopup(localPopups.popups));
+  }, [splashPhase, page, localPopups.popups]);
 
   const activeDestination = useMemo(() => {
     if (page !== "destination" || !route.destinationId) return null;
@@ -158,6 +175,8 @@ function App() {
           <AdminPage
             initialDestinations={localDestinations.destinations}
             onDestinationsChange={(destinations) => localDestinations.setDestinations(destinations)}
+            popups={localPopups.popups}
+            onPopupsChange={localPopups.setPopups}
           />
         ) : page === "careers" ? (
           <CareersPage careers={siteContent.careers} />
@@ -205,6 +224,8 @@ function App() {
           <Footer brand={siteContent.brand} footer={siteContent.footer} />
         ) : null}
       </div>
+
+      {promo ? <SitePromoPopup popup={promo} /> : null}
     </>
   );
 }

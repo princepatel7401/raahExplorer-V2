@@ -7,9 +7,11 @@ import type {
   TripDeparture,
   TripHotel,
   TripItineraryDay,
+  PromoPopup,
 } from "../types/site";
 import { destinationStartingPrice, fallbackDestinations } from "../data/tripsFallback";
 import { AdminSelect, type AdminSelectOption } from "./AdminSelect";
+import { AdminPopupsPanel } from "./AdminPopupsPanel";
 
 const ADMIN_PASSWORD = import.meta.env.VITE_ADMIN_PASSWORD?.trim() || "raah-admin";
 
@@ -83,12 +85,20 @@ function cloneDests(list: DestinationGroup[]): DestinationGroup[] {
 interface AdminPageProps {
   initialDestinations: DestinationGroup[];
   onDestinationsChange?: (destinations: DestinationGroup[]) => void;
+  popups: PromoPopup[];
+  onPopupsChange: (popups: PromoPopup[]) => void;
 }
 
-export function AdminPage({ initialDestinations, onDestinationsChange }: AdminPageProps) {
+export function AdminPage({
+  initialDestinations,
+  onDestinationsChange,
+  popups,
+  onPopupsChange,
+}: AdminPageProps) {
   const [authed, setAuthed] = useState(() => sessionStorage.getItem("raah-admin") === "1");
   const [password, setPassword] = useState("");
   const [authError, setAuthError] = useState<string | null>(null);
+  const [adminTab, setAdminTab] = useState<"destinations" | "popups">("destinations");
   const [destinations, setDestinations] = useState<DestinationGroup[]>(() =>
     cloneDests(initialDestinations.length ? initialDestinations : fallbackDestinations)
   );
@@ -342,17 +352,39 @@ export function AdminPage({ initialDestinations, onDestinationsChange }: AdminPa
     <main className={`admin-page${listView === "full" ? " admin-page--list-full" : ""}`} id="admin">
       <header className="admin-top">
         <div>
-          <h1>Destinations Admin</h1>
-          <p className="admin-muted admin-top__sub">Groups (e.g. Thailand) with nested trips</p>
+          <h1>Site Admin</h1>
+          <p className="admin-muted admin-top__sub">Destinations, trips & promotional popups</p>
+          <div className="admin-tabs" role="tablist" aria-label="Admin sections">
+            <button
+              type="button"
+              role="tab"
+              aria-selected={adminTab === "destinations"}
+              className={`admin-tabs__btn${adminTab === "destinations" ? " is-active" : ""}`}
+              onClick={() => setAdminTab("destinations")}
+            >
+              Destinations
+            </button>
+            <button
+              type="button"
+              role="tab"
+              aria-selected={adminTab === "popups"}
+              className={`admin-tabs__btn${adminTab === "popups" ? " is-active" : ""}`}
+              onClick={() => setAdminTab("popups")}
+            >
+              Popups
+            </button>
+          </div>
         </div>
         <div className="admin-top__actions">
-          <button
-            type="button"
-            className={`admin-btn${listView === "full" ? " admin-btn--primary" : ""}`}
-            onClick={() => setListView((v) => (v === "full" ? "side" : "full"))}
-          >
-            {listView === "full" ? "Edit view" : "Full listing"}
-          </button>
+          {adminTab === "destinations" ? (
+            <button
+              type="button"
+              className={`admin-btn${listView === "full" ? " admin-btn--primary" : ""}`}
+              onClick={() => setListView((v) => (v === "full" ? "side" : "full"))}
+            >
+              {listView === "full" ? "Edit view" : "Full listing"}
+            </button>
+          ) : null}
           <button type="button" className="admin-btn admin-btn--ghost" onClick={logout}>
             Log out
           </button>
@@ -364,6 +396,9 @@ export function AdminPage({ initialDestinations, onDestinationsChange }: AdminPa
 
       {status ? <p className="admin-status" role="status">{status}</p> : null}
 
+      {adminTab === "popups" ? (
+        <AdminPopupsPanel popups={popups} onChange={onPopupsChange} />
+      ) : (
       <div className="admin-layout">
         <aside className="admin-list">
           <div className="admin-list__toolbar">
@@ -741,6 +776,7 @@ export function AdminPage({ initialDestinations, onDestinationsChange }: AdminPa
           )
         ) : null}
       </div>
+      )}
 
       {deleteConfirm
         ? createPortal(

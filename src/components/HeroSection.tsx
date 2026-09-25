@@ -1,7 +1,25 @@
 import { useEffect, useRef, useState } from "react";
 import type { SiteContent } from "../types/site";
 
-const HERO_VIDEOS = ["/videos/hero-travel-1.mp4", "/videos/hero-travel-2.mp4"] as const;
+const HERO_DESKTOP = ["/videos/hero-travel-1-desk.mp4", "/videos/hero-travel-2-desk.mp4"] as const;
+const HERO_MOBILE = ["/videos/hero-travel-1-mobile.mp4", "/videos/hero-travel-2-mobile.mp4"] as const;
+const HERO_POSTER = "/videos/hero-poster.jpg";
+
+function useIsMobileHero() {
+  const [mobile, setMobile] = useState(() =>
+    typeof window !== "undefined" ? window.matchMedia("(max-width: 900px)").matches : true
+  );
+
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 900px)");
+    const sync = () => setMobile(mq.matches);
+    sync();
+    mq.addEventListener("change", sync);
+    return () => mq.removeEventListener("change", sync);
+  }, []);
+
+  return mobile;
+}
 
 function JiggleText({
   text,
@@ -34,11 +52,23 @@ export function HeroSection({ hero }: { hero: SiteContent["hero"] }) {
   const videoARef = useRef<HTMLVideoElement>(null);
   const videoBRef = useRef<HTMLVideoElement>(null);
   const [activeVideo, setActiveVideo] = useState(0);
+  const [ready, setReady] = useState(false);
+  const isMobile = useIsMobileHero();
+  const sources = isMobile ? HERO_MOBILE : HERO_DESKTOP;
+
+  useEffect(() => {
+    setReady(false);
+    setActiveVideo(0);
+  }, [isMobile]);
 
   useEffect(() => {
     const active = activeVideo === 0 ? videoARef.current : videoBRef.current;
     const idle = activeVideo === 0 ? videoBRef.current : videoARef.current;
     if (!active) return;
+
+    const markReady = () => setReady(true);
+    if (active.readyState >= 2) markReady();
+    else active.addEventListener("loadeddata", markReady, { once: true });
 
     void active.play().catch(() => undefined);
     if (idle) {
@@ -46,30 +76,47 @@ export function HeroSection({ hero }: { hero: SiteContent["hero"] }) {
       idle.currentTime = 0;
     }
 
-    const onEnded = () => setActiveVideo((v) => (v + 1) % HERO_VIDEOS.length);
+    // Mobile: loop first clip only (faster, less data). Desktop: crossfade both.
+    if (isMobile) {
+      active.loop = true;
+      return () => {
+        active.loop = false;
+        active.removeEventListener("loadeddata", markReady);
+      };
+    }
+
+    const onEnded = () => setActiveVideo((v) => (v + 1) % sources.length);
     active.addEventListener("ended", onEnded);
-    return () => active.removeEventListener("ended", onEnded);
-  }, [activeVideo]);
+    return () => {
+      active.removeEventListener("ended", onEnded);
+      active.removeEventListener("loadeddata", markReady);
+    };
+  }, [activeVideo, sources, isMobile]);
 
   return (
     <section className="hero hero--cinematic" ref={sectionRef} aria-label="Hero">
-      <div className="hero-media" aria-hidden="true">
+      <div className={`hero-media${ready ? " is-ready" : ""}`} aria-hidden="true">
+        <img className="hero-poster" src={HERO_POSTER} alt="" decoding="async" fetchPriority="high" />
         <video
           ref={videoARef}
           className={`hero-video ${activeVideo === 0 ? "is-active" : ""}`}
-          src={HERO_VIDEOS[0]}
+          src={sources[0]}
           muted
           playsInline
           preload="auto"
+          poster={HERO_POSTER}
         />
-        <video
-          ref={videoBRef}
-          className={`hero-video ${activeVideo === 1 ? "is-active" : ""}`}
-          src={HERO_VIDEOS[1]}
-          muted
-          playsInline
-          preload="metadata"
-        />
+        {!isMobile ? (
+          <video
+            ref={videoBRef}
+            className={`hero-video ${activeVideo === 1 ? "is-active" : ""}`}
+            src={sources[1]}
+            muted
+            playsInline
+            preload="metadata"
+            poster={HERO_POSTER}
+          />
+        ) : null}
         <div className="hero-media-shade" />
         <div className="hero-media-grid" />
         <div className="hero-media-glow" />
@@ -104,7 +151,6 @@ export function HeroSection({ hero }: { hero: SiteContent["hero"] }) {
           </div>
         </div>
       </div>
-
     </section>
   );
 }

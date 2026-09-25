@@ -70,6 +70,24 @@ export interface FooterContactItem {
 
 export type TripCategoryKey = "international" | "domestic" | "group";
 
+/** Festival offer or daily update shown as a site popup */
+export type PromoPopupKind = "festival" | "daily";
+
+export interface PromoPopup {
+  id: string;
+  enabled: boolean;
+  kind: PromoPopupKind;
+  title: string;
+  message: string;
+  imageUrl: string;
+  ctaLabel: string;
+  ctaHref: string;
+  /** YYYY-MM-DD inclusive; empty = no start limit */
+  startDate: string;
+  /** YYYY-MM-DD inclusive; empty = no end limit */
+  endDate: string;
+}
+
 export interface TripCategory {
   key: TripCategoryKey;
   label: string;
