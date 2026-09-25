@@ -90,13 +90,9 @@ export function Footer({ brand, footer }: FooterProps) {
     <footer className="site-footer" aria-label="Footer">
       <div className="footer-grid">
         <div className="footer-brand">
-          <a className="brand" href="#top">
-            <span className="brand-mark" aria-hidden="true">
+          <a className="brand brand--logo-only" href="#top" aria-label={brand.name}>
+            <span className="brand-mark">
               <img className="brand-logo" src="/logo.png" alt="" />
-            </span>
-            <span>
-              <strong>{brand.name}</strong>
-              <small>ADVENTURE AWAITS</small>
             </span>
           </a>
         </div>
@@ -113,7 +109,7 @@ export function Footer({ brand, footer }: FooterProps) {
         </div>
 
         <div className="footer-col">
-          <h3>Our Trips</h3>
+          <h3>Our Destinations</h3>
           <ul className="footer-trips">
             {footer.tripLinks.map((l) => (
               <li key={l.label}>

@@ -134,7 +134,7 @@ export function TripBrochureDocument({ trip, pkg, brandName, generatedAt }: Trip
           <View style={styles.headerLeft}>
             <Text style={styles.h1}>{trip.title}</Text>
             <Text style={styles.sub}>
-              {trip.location} · {trip.category.toUpperCase()} · {trip.durationDays}D/{trip.durationNights}N
+              {trip.location} · {trip.durationDays}D/{trip.durationNights}N
             </Text>
             <View style={styles.chipRow}>
               <Text style={styles.chip}>{pkg.label} package</Text>

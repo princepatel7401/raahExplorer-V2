@@ -1,23 +1,33 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChevronLeft, faChevronRight, faGlobeAsia, faHouseChimney, faUsers } from "@fortawesome/free-solid-svg-icons";
-import type { SiteContent, Trip, TripCategoryKey, TripDeparture, TripPackageBundle } from "../types/site";
+import {
+  faChevronLeft,
+  faChevronRight,
+  faGlobeAsia,
+  faHouseChimney,
+  faUsers,
+} from "@fortawesome/free-solid-svg-icons";
+import type {
+  DestinationGroup,
+  SiteContent,
+  Trip,
+  TripCategoryKey,
+  TripDeparture,
+  TripPackageBundle,
+} from "../types/site";
 import { siteContent } from "../data/siteContent";
-import { CollageImage } from "./CollageImage";
+import { destinationStartingPrice } from "../data/tripsFallback";
+import { TripPhoto } from "./TripPhoto";
 import { formatTripDate } from "../lib/parseSheetDate";
 
 interface TripsSectionProps {
   trips: SiteContent["trips"];
-  tripsLoading?: boolean;
-  tripsError?: string | null;
 }
 
 function departureDisplayPrice(pkg: TripPackageBundle, dep: TripDeparture): number {
   return dep.pricePerPersonInr ?? pkg.pricePerPersonInr;
 }
-
-type TripDetailsState = { trip: Trip } | null;
 
 function formatInr(amount: number) {
   return `₹${amount.toLocaleString("en-IN")}`;
@@ -36,100 +46,13 @@ function CategoryIcon({ category }: { category: TripCategoryKey }) {
   }
 }
 
-/** CSS rotate: 0° = up, clockwise. (x right, y down) from dial center. */
-function needleToward(x: number, y: number) {
-  let deg = (Math.atan2(x, -y) * 180) / Math.PI;
-  if (deg < 0) deg += 360;
-  return deg;
-}
+const CATEGORY_SHORT: Record<TripCategoryKey, string> = {
+  international: "International",
+  domestic: "Domestic",
+  group: "Group",
+};
 
-/** Icon centers in a horizontal row below the dial — keep in sync with CSS gap/size. */
-const ICON_SPACING_PX = 48;
-const ICONS_BELOW_PX = 82;
-
-function TripCompass({
-  categories,
-  active,
-  onSelect,
-}: {
-  categories: SiteContent["trips"]["categories"];
-  active: TripCategoryKey;
-  onSelect: (key: TripCategoryKey) => void;
-}) {
-  const items = categories.slice(0, 3);
-  const activeIndex = Math.max(
-    0,
-    items.findIndex((c) => c.key === active)
-  );
-  const n = Math.max(items.length, 1);
-  const x = (activeIndex - (n - 1) / 2) * ICON_SPACING_PX;
-  const needleDeg = needleToward(x, ICONS_BELOW_PX);
-  const [selecting, setSelecting] = useState(false);
-  const prevActive = useRef(active);
-
-  useEffect(() => {
-    if (prevActive.current === active) return;
-    prevActive.current = active;
-    setSelecting(true);
-    const t = window.setTimeout(() => setSelecting(false), 700);
-    return () => window.clearTimeout(t);
-  }, [active]);
-
-  return (
-    <div
-      className={`trip-arc${selecting ? " is-selecting" : ""}`}
-      role="tablist"
-      aria-label="Trending destinations by category"
-      style={{ ["--needle-deg" as string]: `${needleDeg}deg` }}
-    >
-      <div className="trip-arc__stage">
-        <div className="trip-arc__dial" aria-hidden="true">
-          <img
-            className="trip-arc__logo"
-            src="/logo.png"
-            alt=""
-            draggable={false}
-          />
-          <span className="trip-arc__cardinal trip-arc__cardinal--n">N</span>
-          <span className="trip-arc__cardinal trip-arc__cardinal--e">E</span>
-          <span className="trip-arc__cardinal trip-arc__cardinal--s">S</span>
-          <span className="trip-arc__cardinal trip-arc__cardinal--w">W</span>
-          <div className="trip-arc__arrow">
-            <span className="trip-arc__arrow-head" />
-            <span className="trip-arc__arrow-shaft" />
-          </div>
-          <span className="trip-arc__hub" />
-        </div>
-      </div>
-
-      <div className="trip-arc__points">
-        {items.map((c) => {
-          const selected = c.key === active;
-          return (
-            <button
-              key={c.key}
-              id={`trip-tab-${c.key}`}
-              type="button"
-              role="tab"
-              aria-selected={selected}
-              aria-controls="trip-category-panel"
-              aria-label={c.label}
-              title={c.label}
-              className={`trip-arc__point${selected ? " is-active" : ""}`}
-              onClick={() => onSelect(c.key)}
-            >
-              <span className="trip-arc__point-icon" aria-hidden="true">
-                <CategoryIcon category={c.key} />
-              </span>
-            </button>
-          );
-        })}
-      </div>
-    </div>
-  );
-}
-
-function TripDetailsModal({ trip, onClose }: { trip: Trip; onClose: () => void }) {
+export function TripDetailsModal({ trip, onClose }: { trip: Trip; onClose: () => void }) {
   const [pkgKey, setPkgKey] = useState(trip.defaultPackageKey);
   const [pdfBusy, setPdfBusy] = useState(false);
 
@@ -236,9 +159,16 @@ function TripDetailsModal({ trip, onClose }: { trip: Trip; onClose: () => void }
         </div>
 
         <header className="trip-modal-hero">
-          <CollageImage src={trip.coverImage} alt={trip.title} loading="eager" />
+          <TripPhoto
+            src={trip.coverImage}
+            title={trip.title}
+            subtitle={trip.location}
+            alt={trip.title}
+            loading="eager"
+            tone="cover"
+          />
           <div className="trip-modal-heroText">
-            <span className="trip-chip">{trip.category.toUpperCase()}</span>
+            <span className="trip-chip">TRIP</span>
             <h2>{trip.title}</h2>
             <p className="trip-muted">{trip.location}</p>
             <div className="trip-modal-meta">
@@ -355,28 +285,44 @@ function TripDetailsModal({ trip, onClose }: { trip: Trip; onClose: () => void }
                     </ul>
                   </div>
                   <div className="itinerary-photo">
-                    <CollageImage src={d.image} alt={`${trip.title} day ${d.day}`} loading="lazy" />
+                    <TripPhoto
+                      src={d.image || trip.coverImage}
+                      title={d.title || trip.title}
+                      subtitle={trip.location}
+                      alt={`${trip.title} day ${d.day}`}
+                      loading="lazy"
+                      tone="day"
+                      dayNumber={d.day}
+                    />
                   </div>
                 </article>
               ))}
             </div>
           </div>
 
-          {trip.gallery.length > 0 ? (
-            <div className="trip-modal-card trip-modal-wide">
-              <h3>Photos</h3>
-              <div
-                className="trip-gallery trip-gallery--collage"
-                data-gallery-count={trip.gallery.length <= 6 ? String(trip.gallery.length) : "many"}
-              >
-                {trip.gallery.map((src, gi) => (
-                  <div className="trip-gallery__cell" key={`${src}-${gi}`}>
-                    <CollageImage src={src} alt={`${trip.title} gallery ${gi + 1}`} loading="lazy" />
-                  </div>
-                ))}
-              </div>
-            </div>
-          ) : null}
+          <div className="trip-modal-card trip-modal-wide">
+            <h3>Photos</h3>
+            {(() => {
+              const photos = trip.gallery.length ? trip.gallery : [trip.coverImage || ""];
+              const count = photos.length <= 6 ? String(photos.length) : "many";
+              return (
+                <div className="trip-gallery trip-gallery--collage" data-gallery-count={count}>
+                  {photos.map((src, gi) => (
+                    <div className="trip-gallery__cell" key={`${src || "name"}-${gi}`}>
+                      <TripPhoto
+                        src={src}
+                        title={trip.title}
+                        subtitle={trip.location}
+                        alt={`${trip.title} gallery ${gi + 1}`}
+                        loading="lazy"
+                        tone="gallery"
+                      />
+                    </div>
+                  ))}
+                </div>
+              );
+            })()}
+          </div>
         </section>
       </div>
     </div>,
@@ -384,16 +330,18 @@ function TripDetailsModal({ trip, onClose }: { trip: Trip; onClose: () => void }
   );
 }
 
-export function TripsSection({ trips, tripsLoading, tripsError }: TripsSectionProps) {
+export function TripsSection({ trips }: TripsSectionProps) {
   const [active, setActive] = useState<TripCategoryKey>("international");
-  const [details, setDetails] = useState<TripDetailsState>(null);
   const [deckIndex, setDeckIndex] = useState(0);
   const [filterEnter, setFilterEnter] = useState(false);
   const scrollerRef = useRef<HTMLDivElement>(null);
   const filterInit = useRef(true);
 
-  const filtered = useMemo(() => trips.trips.filter((t) => t.category === active), [active, trips.trips]);
-  const activeLabel = useMemo(() => trips.categories.find((c) => c.key === active)?.label ?? "Trips", [active, trips.categories]);
+  const filtered = useMemo(
+    () => (trips.destinations ?? []).filter((d) => d.category === active),
+    [active, trips.destinations]
+  );
+  const activeLabel = useMemo(() => trips.categories.find((c) => c.key === active)?.label ?? "Destinations", [active, trips.categories]);
   const deckCount = filtered.length;
 
   useEffect(() => {
@@ -456,9 +404,9 @@ export function TripsSection({ trips, tripsLoading, tripsError }: TripsSectionPr
     });
   };
 
-  const openTrip = (trip: Trip, index: number) => {
+  const openDestination = (dest: DestinationGroup, index: number) => {
     if (index !== deckIndex) focusSlide(index);
-    setDetails({ trip });
+    window.location.hash = `destination/${encodeURIComponent(dest.id)}`;
   };
 
   return (
@@ -469,42 +417,32 @@ export function TripsSection({ trips, tripsLoading, tripsError }: TripsSectionPr
           <h2 key={active} className="trip-title">
             {activeLabel}
           </h2>
-          {tripsLoading ? <p className="trips-sheet-status">Loading latest destinations…</p> : null}
-          {tripsError ? (
-            <p className="trips-sheet-status trips-sheet-status--error" role="status">
-              {tripsError} Showing saved destinations.
-            </p>
-          ) : null}
         </div>
         {/* <p className="section-copy">{trips.copy}</p> */}
       </div>
 
-      <div className="trip-toolbar trip-toolbar--compass">
-        <TripCompass categories={trips.categories} active={active} onSelect={setActive} />
-      </div>
-
       <div
-        className="trip-toolbar trip-toolbar--tabs"
+        className="trip-toolbar trip-toolbar--filters"
         role="tablist"
-        aria-label="Trending destinations by category"
+        aria-label="Filter destinations by type"
       >
         {trips.categories.slice(0, 3).map((c) => {
           const selected = c.key === active;
           return (
             <button
               key={c.key}
-              id={`trip-tab-desk-${c.key}`}
+              id={`trip-tab-${c.key}`}
               type="button"
               role="tab"
               aria-selected={selected}
               aria-controls="trip-category-panel"
-              className={`trip-cat-tab${selected ? " is-active" : ""}`}
+              className={`trip-filter trip-filter--${c.key}${selected ? " is-active" : ""}`}
               onClick={() => setActive(c.key)}
             >
-              <span className="trip-cat-tab__icon" aria-hidden="true">
+              <span className="trip-filter__icon" aria-hidden="true">
                 <CategoryIcon category={c.key} />
               </span>
-              <span>{c.label}</span>
+              <span className="trip-filter__label">{CATEGORY_SHORT[c.key]}</span>
             </button>
           );
         })}
@@ -515,7 +453,7 @@ export function TripsSection({ trips, tripsLoading, tripsError }: TripsSectionPr
         id="trip-category-panel"
         role="tabpanel"
         aria-labelledby={`trip-tab-${active}`}
-        aria-label={`${activeLabel} list. Scroll left or right. Tap a card for details.`}
+        aria-label={`${activeLabel} list. Scroll left or right. Tap a card for trips.`}
       >
         {deckCount > 1 ? (
           <button
@@ -530,13 +468,14 @@ export function TripsSection({ trips, tripsLoading, tripsError }: TripsSectionPr
         ) : null}
 
         <div ref={scrollerRef} className="trip-carousel__scroller">
-          {filtered.map((t, i) => {
+          {filtered.map((d, i) => {
             const isActive = i === deckIndex;
             const isPrev = i === deckIndex - 1;
             const isNext = i === deckIndex + 1;
+            const fromPrice = destinationStartingPrice(d);
             return (
               <div
-                key={`${active}-${t.id}`}
+                key={`${active}-${d.id}`}
                 className={`trip-carousel__slide${isActive ? " is-active" : ""}${isPrev ? " is-prev" : ""}${isNext ? " is-next" : ""}`}
                 data-trip-slide=""
                 style={{ ["--slide-i" as string]: i }}
@@ -546,20 +485,27 @@ export function TripsSection({ trips, tripsLoading, tripsError }: TripsSectionPr
                   className={`trip-card${isActive ? " is-focused" : " is-side"}`}
                   data-trip-card="true"
                   aria-current={isActive ? "true" : undefined}
-                  aria-label={`View details for ${t.title}`}
-                  onClick={() => openTrip(t, i)}
+                  aria-label={`View trips for ${d.title}`}
+                  onClick={() => openDestination(d, i)}
                 >
                   <div className="trip-thumb">
-                    <CollageImage src={t.coverImage} alt="" loading="lazy" />
+                    <TripPhoto
+                      src={d.coverImage}
+                      title={d.title}
+                      subtitle={d.location}
+                      alt={d.title}
+                      loading="lazy"
+                      tone="cover"
+                    />
                   </div>
                   <div className="trip-card-body">
-                    <strong>{t.title}</strong>
-                    <span className="trip-muted">{t.location}</span>
+                    <strong>{d.title}</strong>
+                    <span className="trip-muted">{d.location}</span>
                     <div className="trip-meta">
                       <span>
-                        {t.durationDays}D/{t.durationNights}N
+                        {d.trips.length} trip{d.trips.length === 1 ? "" : "s"}
                       </span>
-                      <span>{formatInr(t.startingPricePerPersonInr)} / person</span>
+                      <span>From {formatInr(fromPrice)}</span>
                     </div>
                   </div>
                 </button>
@@ -582,16 +528,12 @@ export function TripsSection({ trips, tripsLoading, tripsError }: TripsSectionPr
 
         {deckCount > 1 ? (
           <div className="trip-carousel__dots" aria-hidden="true">
-            {filtered.map((t, i) => (
-              <span key={t.id} className={`trip-carousel__dot${deckIndex === i ? " is-active" : ""}`} />
+            {filtered.map((d, i) => (
+              <span key={d.id} className={`trip-carousel__dot${deckIndex === i ? " is-active" : ""}`} />
             ))}
           </div>
         ) : null}
       </div>
-
-      {details ? (
-        <TripDetailsModal trip={details.trip} onClose={() => setDetails(null)} />
-      ) : null}
     </section>
   );
 }

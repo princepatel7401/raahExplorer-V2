@@ -1,4 +1,4 @@
-/** Normalize Google Sheet / CSV date strings to YYYY-MM-DD. */
+/** Normalize date strings to YYYY-MM-DD. */
 export function normalizeSheetDate(raw: string): string {
   const s = raw.trim();
   if (!s) return "";
@@ -24,7 +24,7 @@ export function normalizeSheetDate(raw: string): string {
   return s;
 }
 
-/** Display a sheet date in en-IN locale (e.g. 08 Oct 2026). */
+/** Display a trip date in en-IN locale (e.g. 08 Oct 2026). */
 export function formatTripDate(raw: string): string {
   const iso = normalizeSheetDate(raw);
   if (!iso || !/^\d{4}-\d{2}-\d{2}$/.test(iso)) {

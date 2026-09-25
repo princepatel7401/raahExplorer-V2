@@ -1,5 +1,5 @@
 import type { SiteContent } from "../types/site";
-import { fallbackTrips } from "./tripsFallback";
+import { fallbackDestinations } from "./tripsFallback";
 
 export const siteContent: SiteContent = {
   brand: {
@@ -8,7 +8,7 @@ export const siteContent: SiteContent = {
   },
   nav: [
     { label: "Journeys", href: "#journeys" },
-    { label: "Trips", href: "#trips" },
+    { label: "Destinations", href: "#trips" },
     // { label: "Itinerary", href: "#itinerary" },
     { label: "Gallery", href: "#gallery" },
     { label: "Careers", href: "#careers" },
@@ -349,9 +349,9 @@ export const siteContent: SiteContent = {
       { label: "Contact", href: "#customize" }
     ],
     tripLinks: [
-      { label: "Trending Trips", href: "#journeys" },
-      { label: "International Trips", href: "#journeys" },
-      { label: "Domestic Trips", href: "#journeys" }
+      { label: "Trending Destinations", href: "#trips" },
+      { label: "International Destinations", href: "#trips" },
+      { label: "Domestic Destinations", href: "#trips" }
     ],
     contacts: [
       { icon: "phone", label: "88664 25004", value: "88664 25004", href: "tel:+918866425004" },
@@ -384,24 +384,24 @@ export const siteContent: SiteContent = {
     categories: [
       {
         key: "international",
-        label: "International Trips",
+        label: "International Destinations",
         description: "Visa-ready itineraries, premium stays, and seamless city-to-island routing.",
-        coverImage: "/International Destinations Labels/malaysia.webp"
+        coverImage: "/International Destinations Labels/maldives.webp"
       },
       {
         key: "domestic",
-        label: "Domestic Trips",
+        label: "Domestic Destinations",
         description: "Hill stations, beaches, culture circuits, and stay-first weekend getaways.",
         coverImage: "/Domestic Destinations Labels/kashmir.webp"
       },
       {
         key: "group",
-        label: "Group Trips",
+        label: "Group Destinations",
         description: "Fixed departures with coordinated logistics, guide support, and group pricing.",
-        coverImage: "/Domestic Destinations Labels/himachal.webp"
+        coverImage: "/Domestic Destinations Labels/ladakh.webp"
       }
     ],
-    trips: fallbackTrips
+    destinations: fallbackDestinations
   }
 };
 

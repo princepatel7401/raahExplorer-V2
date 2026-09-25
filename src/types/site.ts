@@ -115,15 +115,16 @@ export interface TripPackageBundle {
   excludes?: string[];
 }
 
+/** One trip package under a destination (profile + day-wise + gallery) */
 export interface Trip {
   id: string;
-  category: TripCategoryKey;
   title: string;
   location: string;
   durationDays: number;
   durationNights: number;
   /** Lowest package price — used on cards */
   startingPricePerPersonInr: number;
+  /** Trip profile / card image */
   coverImage: string;
   gallery: string[];
   highlights: string[];
@@ -133,6 +134,18 @@ export interface Trip {
   /** Pre-selected tier in the trip modal */
   defaultPackageKey: string;
   departures: TripDeparture[];
+}
+
+/** Destination group (e.g. Thailand) with title image and nested trips */
+export interface DestinationGroup {
+  id: string;
+  category: TripCategoryKey;
+  title: string;
+  location: string;
+  /** Destination title / hero image */
+  coverImage: string;
+  summary?: string;
+  trips: Trip[];
 }
 
 export interface CareerRole {
@@ -228,7 +241,8 @@ export interface SiteContent {
     title: string;
     copy: string;
     categories: TripCategory[];
-    trips: Trip[];
+    /** Destination groups (e.g. Thailand) each containing multiple trips */
+    destinations: DestinationGroup[];
   };
 }
 
