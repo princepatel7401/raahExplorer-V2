@@ -134,9 +134,6 @@ function App() {
               decoding="async"
               fetchPriority="high"
             />
-            <p className={`splash-brand splash-brand--${splashPhase}`}>
-              {siteContent.brand.name}
-            </p>
           </div>
         </div>
       ) : null}

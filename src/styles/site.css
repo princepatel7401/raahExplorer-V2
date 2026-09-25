@@ -510,7 +510,9 @@ button, input, select, textarea { font: inherit; }
   position: relative;
   width: auto;
   height: auto;
+  padding: 0;
   border-radius: 0;
+  background: transparent;
   filter: drop-shadow(0 8px 16px rgb(0 0 0 / 0.28));
 }
 .site-header .brand--logo-only .brand-logo {
@@ -518,20 +520,22 @@ button, input, select, textarea { font: inherit; }
   height: 58px;
   max-width: min(280px, 42vw);
   object-fit: contain;
+  filter: brightness(0) invert(1);
 }
 
-/* Header full logo: light on dark UI / dark on light UI */
-[data-theme="dark"] .site-header .brand-logo {
-  filter: brightness(0) invert(1);
-}
-[data-theme="light"] .site-header:not(.is-scrolled) .brand-logo {
-  filter: brightness(0) invert(1);
-}
-[data-theme="light"] .site-header.is-scrolled .brand-logo {
-  filter: none;
-}
+/* Header logo is always white — same before and after scroll */
+.site-header .brand-logo,
+.site-header.is-scrolled .brand-logo,
+[data-theme="light"] .site-header .brand-logo,
+[data-theme="light"] .site-header.is-scrolled .brand-logo,
 [data-theme="light"] .page-shell--careers .site-header .brand-logo {
-  filter: none;
+  filter: brightness(0) invert(1);
+}
+[data-theme="light"] .site-header.is-scrolled .brand--logo-only .brand-mark,
+[data-theme="light"] .page-shell--careers .site-header .brand--logo-only .brand-mark {
+  padding: 0;
+  border-radius: 0;
+  background: transparent;
 }
 .brand-mark {
   width: 72px; height: 72px; display: grid; place-items: center; border-radius: 16px;
