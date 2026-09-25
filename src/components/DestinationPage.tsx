@@ -220,7 +220,7 @@ export function DestinationPage({ destination, destinations }: DestinationPagePr
       >
         <div className="dest-page__listing-head">
           <h2 id="dest-trips-heading">Trips in {destination.title}</h2>
-          <p>Every package for this destination — open any card for itinerary and gallery.</p>
+          <p>Every package for this destination — tap a card for itinerary and gallery.</p>
         </div>
 
         {destination.trips.length === 0 ? (
@@ -231,9 +231,9 @@ export function DestinationPage({ destination, destinations }: DestinationPagePr
               <li key={t.id} style={{ ["--card-i" as string]: i }}>
                 <button
                   type="button"
-                  className="dest-page__card"
+                  className="dest-page__card dest-page__card--image"
                   onClick={() => setDetails(t)}
-                  aria-label={`View details for ${t.title}`}
+                  aria-label={`View ${t.title}`}
                 >
                   <div className="dest-page__card-media">
                     <TripPhoto
@@ -244,20 +244,6 @@ export function DestinationPage({ destination, destinations }: DestinationPagePr
                       loading="lazy"
                       tone="cover"
                     />
-                    <span className="dest-page__card-badge">
-                      {t.durationDays}D / {t.durationNights}N
-                    </span>
-                  </div>
-                  <div className="dest-page__card-body">
-                    <strong>{t.title}</strong>
-                    <span className="dest-page__card-loc">{t.location}</span>
-                    <div className="dest-page__card-meta">
-                      <span className="dest-page__card-price">
-                        {formatInr(t.startingPricePerPersonInr)}
-                        <small> / person</small>
-                      </span>
-                      <span className="dest-page__card-cta">View details</span>
-                    </div>
                   </div>
                 </button>
               </li>

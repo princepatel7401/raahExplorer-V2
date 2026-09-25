@@ -3,10 +3,11 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#ffffff" />
+    <meta name="theme-color" content="#0a100d" />
     <meta name="color-scheme" content="light" />
     <link rel="icon" href="/logo.png" type="image/png" />
     <link rel="apple-touch-icon" href="/logo.png" />
+    <link rel="preload" href="/logo-light.png" as="image" type="image/png" />
 
     <title>Raah Explorer Tour &amp; Travel Packages in Ahmedabad | Domestic &amp; International Trips</title>
     <meta
@@ -131,7 +132,10 @@
       }
     </script>
   </head>
-  <body>
+  <body style="margin:0;background:#0a100d">
+    <div id="boot-splash" aria-hidden="true" style="position:fixed;inset:0;z-index:9999;display:grid;place-items:center;background:linear-gradient(180deg,#121a16 0%,#0a100d 55%,#070b09 100%)">
+      <img src="/logo-light.png" alt="" width="168" height="168" style="width:min(168px,46vw);height:auto;display:block" />
+    </div>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

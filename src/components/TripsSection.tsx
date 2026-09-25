@@ -17,7 +17,6 @@ import type {
   TripPackageBundle,
 } from "../types/site";
 import { siteContent } from "../data/siteContent";
-import { destinationStartingPrice } from "../data/tripsFallback";
 import { TripPhoto } from "./TripPhoto";
 import { formatTripDate } from "../lib/parseSheetDate";
 
@@ -472,7 +471,6 @@ export function TripsSection({ trips }: TripsSectionProps) {
             const isActive = i === deckIndex;
             const isPrev = i === deckIndex - 1;
             const isNext = i === deckIndex + 1;
-            const fromPrice = destinationStartingPrice(d);
             return (
               <div
                 key={`${active}-${d.id}`}
@@ -482,7 +480,7 @@ export function TripsSection({ trips }: TripsSectionProps) {
               >
                 <button
                   type="button"
-                  className={`trip-card${isActive ? " is-focused" : " is-side"}`}
+                  className={`trip-card trip-card--image${isActive ? " is-focused" : " is-side"}`}
                   data-trip-card="true"
                   aria-current={isActive ? "true" : undefined}
                   aria-label={`View trips for ${d.title}`}
@@ -497,16 +495,6 @@ export function TripsSection({ trips }: TripsSectionProps) {
                       loading="lazy"
                       tone="cover"
                     />
-                  </div>
-                  <div className="trip-card-body">
-                    <strong>{d.title}</strong>
-                    <span className="trip-muted">{d.location}</span>
-                    <div className="trip-meta">
-                      <span>
-                        {d.trips.length} trip{d.trips.length === 1 ? "" : "s"}
-                      </span>
-                      <span>From {formatInr(fromPrice)}</span>
-                    </div>
                   </div>
                 </button>
               </div>

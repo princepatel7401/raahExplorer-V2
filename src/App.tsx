@@ -25,9 +25,9 @@ import { useEffect, useMemo, useState } from "react";
 import type { PromoPopup } from "./types/site";
 
 /** Succession: logo pop → hold → exit → site enter. */
-const SPLASH_POP_MS = 900;
-const SPLASH_HOLD_MS = 700;
-const SPLASH_EXIT_MS = 650;
+const SPLASH_POP_MS = 780;
+const SPLASH_HOLD_MS = 640;
+const SPLASH_EXIT_MS = 520;
 
 type AppPage = "home" | "careers" | "admin" | "destination";
 
@@ -144,11 +144,11 @@ function App() {
           <div className="splash-inner">
             <img
               className={`splash-logo splash-logo--${splashPhase}`}
-              src="/logo.png"
+              src="/logo-light.png"
               alt=""
-              width={220}
-              height={220}
-              decoding="async"
+              width={200}
+              height={200}
+              decoding="sync"
               fetchPriority="high"
             />
           </div>
