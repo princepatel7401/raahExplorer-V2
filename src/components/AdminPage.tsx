@@ -311,7 +311,7 @@ export function AdminPage({ initialDestinations, onDestinationsChange }: AdminPa
     return (
       <main className="admin-page admin-page--login" id="admin">
         <form className="admin-login" onSubmit={login}>
-          <img src="/logo.png" alt="" width={64} height={64} />
+          <img className="admin-login__logo" src="/logo.png" alt="Raah Explorer" />
           <h1>Destinations Admin</h1>
           <p className="admin-muted">Manage destination groups and their trips.</p>
           <label>

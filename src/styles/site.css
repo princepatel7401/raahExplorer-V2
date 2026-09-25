@@ -4538,16 +4538,24 @@ html.is-admin-open body {
   }
 }
 .admin-login {
-  width: min(380px, 100%);
+  width: min(400px, 100%);
   display: grid;
   gap: 12px;
-  padding: 28px 24px;
+  padding: 32px 28px;
   border-radius: 20px;
   border: 1px solid rgb(var(--cream-rgb) / 0.12);
   background: rgb(8 12 10 / 0.55);
   text-align: center;
 }
-.admin-login img { margin: 0 auto; }
+.admin-login__logo {
+  display: block;
+  width: auto;
+  height: 72px;
+  max-width: min(240px, 70%);
+  margin: 0 auto 4px;
+  object-fit: contain;
+  filter: brightness(0) invert(1);
+}
 .admin-login h1 { margin: 0; font-size: 1.4rem; font-weight: 500; }
 .admin-login label,
 .admin-grid label {
@@ -5164,6 +5172,9 @@ html.is-admin-open body {
 [data-theme="light"] .admin-editor {
   background: #fff;
   border-color: rgb(0 0 0 / 0.08);
+}
+[data-theme="light"] .admin-login__logo {
+  filter: none;
 }
 [data-theme="light"] .admin-login input,
 [data-theme="light"] .admin-grid input,
