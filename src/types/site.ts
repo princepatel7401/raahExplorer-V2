@@ -82,9 +82,17 @@ export interface PromoPopup {
   title: string;
   message: string;
   imageUrl: string;
-  /** YYYY-MM-DD inclusive; empty = no start limit */
+  /**
+   * YYYY-MM-DD inclusive.
+   * Festival: empty = no start limit.
+   * Daily: required — first day the update is shown.
+   */
   startDate: string;
-  /** YYYY-MM-DD inclusive; empty = no end limit */
+  /**
+   * YYYY-MM-DD inclusive.
+   * Festival: empty = no end limit.
+   * Daily: empty = same as startDate (single day).
+   */
   endDate: string;
 }
 

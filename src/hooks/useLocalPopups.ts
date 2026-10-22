@@ -98,7 +98,7 @@ export function emptyPromoPopup(): PromoPopup {
   };
 }
 
-function todayIso(): string {
+export function todayIso(): string {
   const d = new Date();
   const y = d.getFullYear();
   const m = String(d.getMonth() + 1).padStart(2, "0");
@@ -106,14 +106,50 @@ function todayIso(): string {
   return `${y}-${m}-${day}`;
 }
 
-export function isPopupActiveNow(p: PromoPopup, today = todayIso()): boolean {
-  if (!p.enabled) return false;
-  if (p.startDate && today < p.startDate) return false;
-  if (p.endDate && today > p.endDate) return false;
+function hasPopupContent(p: PromoPopup): boolean {
   return Boolean(p.title.trim() || p.message.trim() || p.imageUrl.trim() || p.highlight.trim());
 }
 
+/** Inclusive window for a popup; null = always (festival only). */
+export function popupDateWindow(p: PromoPopup): { start: string; end: string } | null {
+  if (p.kind === "daily") {
+    if (!p.startDate) return null;
+    return { start: p.startDate, end: p.endDate || p.startDate };
+  }
+  if (!p.startDate && !p.endDate) return null;
+  return {
+    start: p.startDate || "0000-01-01",
+    end: p.endDate || "9999-12-31",
+  };
+}
+
+export type PopupVisibility = "live" | "scheduled" | "ended" | "off" | "needs-date" | "empty";
+
+export function getPopupVisibility(p: PromoPopup, today = todayIso()): PopupVisibility {
+  if (!p.enabled) return "off";
+  if (!hasPopupContent(p)) return "empty";
+
+  if (p.kind === "daily" && !p.startDate) return "needs-date";
+
+  if (p.startDate && p.endDate && p.startDate > p.endDate) return "ended";
+
+  const window = popupDateWindow(p);
+  if (!window) return "live";
+  if (today < window.start) return "scheduled";
+  if (today > window.end) return "ended";
+  return "live";
+}
+
+export function isPopupActiveNow(p: PromoPopup, today = todayIso()): boolean {
+  return getPopupVisibility(p, today) === "live";
+}
+
+/**
+ * Prefer today’s daily update over a festival offer so dailies actually surface
+ * when both are enabled.
+ */
 export function pickActivePopup(popups: PromoPopup[]): PromoPopup | null {
   const today = todayIso();
-  return popups.find((p) => isPopupActiveNow(p, today)) ?? null;
+  const live = popups.filter((p) => isPopupActiveNow(p, today));
+  return live.find((p) => p.kind === "daily") ?? live.find((p) => p.kind === "festival") ?? live[0] ?? null;
 }

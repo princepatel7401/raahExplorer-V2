@@ -6964,6 +6964,76 @@ html.is-admin-open body {
   min-height: 0;
   overflow: auto;
 }
+.admin-popups__head-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.admin-popups__date-hint {
+  margin: -4px 0 0;
+  font-size: 0.85rem;
+  line-height: 1.4;
+}
+.admin-popups__warn,
+.admin-popups__info {
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+.admin-popups__warn {
+  background: rgb(185 28 28 / 0.12);
+  color: #b91c1c;
+  border: 1px solid rgb(185 28 28 / 0.28);
+}
+.admin-popups__info {
+  background: rgb(var(--logo-rgb) / 0.12);
+  color: var(--logo);
+  border: 1px solid rgb(var(--logo-rgb) / 0.28);
+}
+.admin-popup-status {
+  display: inline-flex;
+  align-items: center;
+  margin-top: 4px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  width: fit-content;
+}
+.admin-list__item .admin-popup-status { margin-top: 6px; }
+.admin-popup-status--live {
+  background: rgb(22 163 74 / 0.16);
+  color: #15803d;
+}
+.admin-popup-status--scheduled {
+  background: rgb(234 179 8 / 0.18);
+  color: #a16207;
+}
+.admin-popup-status--ended,
+.admin-popup-status--off,
+.admin-popup-status--empty,
+.admin-popup-status--needs-date {
+  background: rgb(0 0 0 / 0.08);
+  color: rgb(17 17 17 / 0.62);
+}
+[data-theme="dark"] .admin-popup-status--ended,
+[data-theme="dark"] .admin-popup-status--off,
+[data-theme="dark"] .admin-popup-status--empty,
+[data-theme="dark"] .admin-popup-status--needs-date {
+  background: rgb(255 255 255 / 0.08);
+  color: rgb(255 255 255 / 0.62);
+}
+[data-theme="dark"] .admin-popups__warn {
+  background: rgb(248 113 113 / 0.12);
+  color: #fecaca;
+  border-color: rgb(248 113 113 / 0.28);
+}
+[data-theme="dark"] .admin-popups__info {
+  color: #bbf7d0;
+}
 .admin-check--inline {
   display: inline-flex !important;
   align-items: center;
