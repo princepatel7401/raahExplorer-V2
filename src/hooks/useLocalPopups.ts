@@ -144,12 +144,17 @@ export function isPopupActiveNow(p: PromoPopup, today = todayIso()): boolean {
   return getPopupVisibility(p, today) === "live";
 }
 
-/**
- * Prefer today’s daily update over a festival offer so dailies actually surface
- * when both are enabled.
- */
-export function pickActivePopup(popups: PromoPopup[]): PromoPopup | null {
+/** All live popups for the site UI — dailies first, then festivals (list order). */
+export function listActivePopups(popups: PromoPopup[]): PromoPopup[] {
   const today = todayIso();
   const live = popups.filter((p) => isPopupActiveNow(p, today));
-  return live.find((p) => p.kind === "daily") ?? live.find((p) => p.kind === "festival") ?? live[0] ?? null;
+  const dailies = live.filter((p) => p.kind === "daily");
+  const festivals = live.filter((p) => p.kind === "festival");
+  const other = live.filter((p) => p.kind !== "daily" && p.kind !== "festival");
+  return [...dailies, ...festivals, ...other];
+}
+
+/** @deprecated Prefer listActivePopups — kept for single-item callers */
+export function pickActivePopup(popups: PromoPopup[]): PromoPopup | null {
+  return listActivePopups(popups)[0] ?? null;
 }

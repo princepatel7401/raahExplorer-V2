@@ -16,7 +16,7 @@ import { TrustStripItemContent } from "./components/TrustStripIcons";
 import { siteContent } from "./data/siteContent";
 import { useLocalDestinations } from "./hooks/useLocalDestinations";
 import {
-  pickActivePopup,
+  listActivePopups,
   useLocalPopups,
 } from "./hooks/useLocalPopups";
 import { useScrollReveal } from "./hooks/useScrollReveal";
@@ -57,7 +57,7 @@ function App() {
     typeof window !== "undefined" ? parseHash(window.location.hash) : { page: "home" as AppPage, destinationId: null }
   );
   const [trustTip, setTrustTip] = useState<string | null>(null);
-  const [promo, setPromo] = useState<PromoPopup | null>(null);
+  const [promos, setPromos] = useState<PromoPopup[]>([]);
 
   const page = route.page;
   const localDestinations = useLocalDestinations();
@@ -111,11 +111,11 @@ function App() {
 
   useEffect(() => {
     if (page === "admin") {
-      setPromo(null);
+      setPromos([]);
       return;
     }
     if (splashPhase !== "done") return;
-    setPromo(pickActivePopup(localPopups.popups));
+    setPromos(listActivePopups(localPopups.popups));
   }, [splashPhase, page, localPopups.popups]);
 
   const activeDestination = useMemo(() => {
@@ -240,7 +240,7 @@ function App() {
         ) : null}
       </div>
 
-      {promo ? <SitePromoPopup popup={promo} /> : null}
+      {promos.length ? <SitePromoPopup popups={promos} /> : null}
     </>
   );
 }

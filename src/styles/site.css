@@ -6343,41 +6343,67 @@ html.is-admin-open body {
 }
 
 /* ========== Promo teaser + detail popup ========== */
-.promo-teaser {
+.promo-teaser-stack {
   position: fixed;
   z-index: 240;
   left: 14px;
   right: 14px;
   bottom: calc(16px + env(safe-area-inset-bottom, 0px));
   display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 360px;
+  max-height: min(70vh, 420px);
+  margin-inline: auto;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  pointer-events: none;
+  transform: translateY(120%);
+  opacity: 0;
+  transition:
+    transform 480ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 320ms ease;
+  scrollbar-width: thin;
+}
+.promo-teaser-stack.is-in {
+  transform: translateY(0);
+  opacity: 1;
+  pointer-events: none;
+}
+.promo-teaser-stack.is-in .promo-teaser {
+  pointer-events: auto;
+}
+.promo-teaser-stack.is-out,
+.promo-teaser-stack.is-hidden {
+  transform: translateY(28px);
+  opacity: 0;
+  pointer-events: none;
+}
+.promo-teaser {
+  position: relative;
+  left: auto;
+  right: auto;
+  bottom: auto;
+  z-index: auto;
+  display: flex;
   align-items: stretch;
   gap: 0;
-  max-width: 360px;
-  margin-inline: auto;
+  width: 100%;
+  max-width: none;
+  margin-inline: 0;
+  flex-shrink: 0;
   border-radius: 18px;
   background: linear-gradient(135deg, #1c2620 0%, #121916 100%);
   box-shadow:
     0 14px 36px rgb(0 0 0 / 0.38),
     0 0 0 1px rgb(255 255 255 / 0.08);
   color: #f7f7f7;
-  transform: translateY(120%) scale(0.94);
-  opacity: 0;
-  pointer-events: none;
-  transition:
-    transform 480ms cubic-bezier(0.22, 1, 0.36, 1),
-    opacity 320ms ease;
 }
-.promo-teaser.is-in {
-  transform: translateY(0) scale(1);
-  opacity: 1;
-  pointer-events: auto;
+.promo-teaser-stack.is-in .promo-teaser:first-child {
   animation: promoTeaserPulse 2.8s ease-in-out 0.6s infinite;
 }
-.promo-teaser.is-out,
-.promo-teaser.is-hidden {
-  transform: translateY(28px) scale(0.92);
-  opacity: 0;
-  pointer-events: none;
+.promo-teaser-stack.is-hidden .promo-teaser {
   animation: none;
 }
 @keyframes promoTeaserPulse {
@@ -6498,12 +6524,13 @@ html.is-admin-open body {
 }
 
 @media (min-width: 761px) {
-  .promo-teaser {
+  .promo-teaser-stack {
     left: auto;
     right: 22px;
     bottom: 22px;
     margin-inline: 0;
     width: min(340px, calc(100vw - 44px));
+    max-width: none;
   }
 }
 
