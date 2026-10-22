@@ -1872,17 +1872,17 @@ h1 { margin: 14px 0 18px; font-size: clamp(2.7rem, 7vw, 5.3rem); line-height: 0.
   outline-offset: 2px;
 }
 .trip-filter.is-active {
-  color: var(--logo);
-  background: rgb(var(--logo-rgb) / 0.14);
-  border-color: rgb(var(--logo-rgb) / 0.4);
-  box-shadow: 0 4px 14px rgb(var(--logo-rgb) / 0.16);
+  color: var(--neon);
+  background: rgb(var(--neon-rgb) / 0.16);
+  border-color: rgb(var(--neon-rgb) / 0.45);
+  box-shadow: 0 4px 14px rgb(var(--neon-rgb) / 0.18);
 }
 .trip-filter.is-active .trip-filter__icon {
-  background: rgb(var(--logo-rgb) / 0.18);
-  color: var(--logo);
+  background: rgb(var(--neon-rgb) / 0.22);
+  color: var(--neon);
 }
 .trip-filter.is-active .trip-filter__label {
-  color: var(--logo);
+  color: var(--neon);
 }
 
 .trip-filter--international {
@@ -1898,9 +1898,9 @@ h1 { margin: 14px 0 18px; font-size: clamp(2.7rem, 7vw, 5.3rem); line-height: 0.
   background: rgb(56 140 160 / 0.12);
 }
 .trip-filter--international.is-active {
-  color: var(--logo);
-  background: rgb(var(--logo-rgb) / 0.14);
-  border-color: rgb(var(--logo-rgb) / 0.4);
+  color: var(--neon);
+  background: rgb(var(--neon-rgb) / 0.16);
+  border-color: rgb(var(--neon-rgb) / 0.45);
 }
 
 .trip-filter--domestic {
@@ -1916,9 +1916,9 @@ h1 { margin: 14px 0 18px; font-size: clamp(2.7rem, 7vw, 5.3rem); line-height: 0.
   background: rgb(75 106 72 / 0.12);
 }
 .trip-filter--domestic.is-active {
-  color: var(--logo);
-  background: rgb(var(--logo-rgb) / 0.14);
-  border-color: rgb(var(--logo-rgb) / 0.4);
+  color: var(--neon);
+  background: rgb(var(--neon-rgb) / 0.16);
+  border-color: rgb(var(--neon-rgb) / 0.45);
 }
 
 .trip-filter--group {
@@ -1934,9 +1934,9 @@ h1 { margin: 14px 0 18px; font-size: clamp(2.7rem, 7vw, 5.3rem); line-height: 0.
   background: rgb(176 130 72 / 0.12);
 }
 .trip-filter--group.is-active {
-  color: var(--logo);
-  background: rgb(var(--logo-rgb) / 0.14);
-  border-color: rgb(var(--logo-rgb) / 0.4);
+  color: var(--neon);
+  background: rgb(var(--neon-rgb) / 0.16);
+  border-color: rgb(var(--neon-rgb) / 0.45);
 }
 
 @keyframes tripTitleIn {
@@ -2353,12 +2353,27 @@ h1 { margin: 14px 0 18px; font-size: clamp(2.7rem, 7vw, 5.3rem); line-height: 0.
   }
 }
 
-/* Trending Destinations — light theme */
-[data-theme="light"] .section-trips .trip-filter {
+/* Trending Destinations — light theme filters (beat category hover/active dark rules) */
+[data-theme="light"] .section-trips .trip-filter,
+[data-theme="light"] .section-trips .trip-filter--international,
+[data-theme="light"] .section-trips .trip-filter--domestic,
+[data-theme="light"] .section-trips .trip-filter--group {
   color: rgb(17 17 17 / 0.68);
-  background: #fff;
-  border-color: rgb(0 0 0 / 0.08);
-  box-shadow: 0 4px 12px rgb(0 0 0 / 0.04);
+  background: #ffffff;
+  border-color: rgb(0 0 0 / 0.1);
+  box-shadow: 0 2px 10px rgb(0 0 0 / 0.04);
+}
+[data-theme="light"] .section-trips .trip-filter:hover,
+[data-theme="light"] .section-trips .trip-filter:focus-visible,
+[data-theme="light"] .section-trips .trip-filter--international:hover,
+[data-theme="light"] .section-trips .trip-filter--international:focus-visible,
+[data-theme="light"] .section-trips .trip-filter--domestic:hover,
+[data-theme="light"] .section-trips .trip-filter--domestic:focus-visible,
+[data-theme="light"] .section-trips .trip-filter--group:hover,
+[data-theme="light"] .section-trips .trip-filter--group:focus-visible {
+  background: #f7faf8;
+  border-color: rgb(var(--logo-rgb) / 0.28);
+  color: rgb(17 17 17 / 0.88);
 }
 [data-theme="light"] .section-trips .trip-filter--international .trip-filter__icon {
   color: #2f7f92;
@@ -2372,13 +2387,28 @@ h1 { margin: 14px 0 18px; font-size: clamp(2.7rem, 7vw, 5.3rem); line-height: 0.
   color: #8a6230;
   background: rgb(176 130 72 / 0.14);
 }
-[data-theme="light"] .section-trips .trip-filter.is-active {
+[data-theme="light"] .section-trips .trip-filter.is-active,
+[data-theme="light"] .section-trips .trip-filter--international.is-active,
+[data-theme="light"] .section-trips .trip-filter--domestic.is-active,
+[data-theme="light"] .section-trips .trip-filter--group.is-active {
   color: var(--logo);
-  background: rgb(var(--logo-rgb) / 0.12);
-  border-color: rgb(var(--logo-rgb) / 0.35);
+  background: #ffffff;
+  border-color: var(--logo);
+  box-shadow:
+    0 0 0 1px rgb(var(--logo-rgb) / 0.2),
+    0 6px 16px rgb(var(--logo-rgb) / 0.14);
 }
 [data-theme="light"] .section-trips .trip-filter.is-active .trip-filter__icon,
-[data-theme="light"] .section-trips .trip-filter.is-active .trip-filter__label {
+[data-theme="light"] .section-trips .trip-filter--international.is-active .trip-filter__icon,
+[data-theme="light"] .section-trips .trip-filter--domestic.is-active .trip-filter__icon,
+[data-theme="light"] .section-trips .trip-filter--group.is-active .trip-filter__icon {
+  color: #ffffff;
+  background: var(--logo);
+}
+[data-theme="light"] .section-trips .trip-filter.is-active .trip-filter__label,
+[data-theme="light"] .section-trips .trip-filter--international.is-active .trip-filter__label,
+[data-theme="light"] .section-trips .trip-filter--domestic.is-active .trip-filter__label,
+[data-theme="light"] .section-trips .trip-filter--group.is-active .trip-filter__label {
   color: var(--logo);
 }
 
