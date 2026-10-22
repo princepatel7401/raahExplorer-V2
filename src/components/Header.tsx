@@ -36,7 +36,11 @@ export function Header({
     >
       <a className="brand brand--logo-only" href="#top" aria-label={brand.name}>
         <span className="brand-mark">
-          <img className="brand-logo" src="/logo.png" alt="" />
+          <img
+            className="brand-logo"
+            src={theme === "light" ? "/logo-on-light.png" : "/logo-light.png"}
+            alt=""
+          />
         </span>
       </a>
 

@@ -49,23 +49,24 @@
      In light theme, flip it to near-black so those rules become readable. */
   --cream: #111111;
   --cream-rgb: 17 17 17;
+  --void: #ffffff;
   --surface-root: #ffffff;
-  --surface-deep: #f5f7f6;
-  --surface-mid: #eef2ef;
+  --surface-deep: #ffffff;
+  --surface-mid: #f7f9f8;
   --bg: #ffffff;
-  --panel: rgb(255 255 255 / 0.92);
+  --panel: #ffffff;
   --panel-border: rgb(0 0 0 / 0.08);
   --text: rgb(17 17 17 / 0.96);
   --muted: rgb(17 17 17 / 0.58);
   --shadow:
     0 0 0 1px rgb(0 0 0 / 0.06),
-    0 18px 45px rgb(0 0 0 / 0.10);
+    0 18px 45px rgb(0 0 0 / 0.08);
   --shadow-soft:
     0 0 0 1px rgb(0 0 0 / 0.05),
-    0 10px 28px rgb(0 0 0 / 0.08);
+    0 10px 28px rgb(0 0 0 / 0.06);
   --shadow-card:
     0 1px 2px rgb(0 0 0 / 0.03),
-    0 6px 20px rgb(0 0 0 / 0.06),
+    0 6px 20px rgb(0 0 0 / 0.05),
     0 0 0 1px rgb(0 0 0 / 0.04);
   --shadow-card-hover:
     0 8px 20px rgb(0 0 0 / 0.08),
@@ -79,6 +80,7 @@
   --mint: var(--logo);
   --brand-sage: var(--logo);
   --green-light: #6b8f67;
+  --green-deep: #2f4530;
   --hero-label-gold: rgb(var(--logo-rgb) / 0.92);
 }
 
@@ -119,6 +121,13 @@ html.is-modal-open body {
 
 [data-theme="light"] body {
   font-weight: 400;
+  background: #ffffff;
+  color: rgb(17 17 17 / 0.96);
+}
+
+[data-theme="light"] .page-shell {
+  background: #ffffff;
+  color: rgb(17 17 17 / 0.96);
 }
 
 [data-theme="light"] strong,
@@ -158,10 +167,7 @@ body::before {
 }
 
 [data-theme="light"] body::before {
-  background-image:
-    linear-gradient(rgb(0 0 0 / 0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgb(0 0 0 / 0.05) 1px, transparent 1px);
-  opacity: 0.25;
+  display: none;
 }
 
 /* Scroll polish (works in Chromium + Firefox) — no up/down arrow buttons */
@@ -374,11 +380,17 @@ button, input, select, textarea { font: inherit; }
   color: #f7f7f7;
 }
 
-[data-theme="light"] .site-header {
-  background: transparent;
-  border: none;
-  box-shadow: none;
-  color: #f7f7f7;
+/* Light theme: solid white header across the full site */
+[data-theme="light"] .site-header,
+[data-theme="light"] .page-shell--destination .site-header,
+[data-theme="light"] .site-header--destination,
+[data-theme="light"] .page-shell--careers .site-header {
+  background: #ffffff !important;
+  border-bottom: 1px solid rgb(0 0 0 / 0.08);
+  box-shadow: 0 8px 24px rgb(0 0 0 / 0.06);
+  color: rgb(17 17 17 / 0.92) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
 }
 
 .site-header .brand strong {
@@ -408,8 +420,18 @@ button, input, select, textarea { font: inherit; }
 [data-theme="light"] .brand strong {
   color: var(--brand-leaf);
 }
-[data-theme="light"] .site-header .brand strong {
-  color: #ffffff;
+[data-theme="light"] .site-header .brand strong,
+[data-theme="light"] .site-header .brand small {
+  color: rgb(17 17 17 / 0.92) !important;
+  text-shadow: none !important;
+}
+[data-theme="light"] .site-header .top-nav a {
+  color: rgb(17 17 17 / 0.72) !important;
+  text-shadow: none !important;
+}
+[data-theme="light"] .site-header .top-nav a:hover,
+[data-theme="light"] .site-header .top-nav a.is-active {
+  color: rgb(17 17 17 / 0.96) !important;
 }
 [data-theme="light"] .site-footer .brand strong {
   color: var(--brand-leaf);
@@ -424,12 +446,12 @@ button, input, select, textarea { font: inherit; }
   background: rgb(255 255 255 / 0.14);
 }
 [data-theme="light"] .site-header .theme-toggle {
-  border-color: rgb(255 255 255 / 0.28);
-  background: rgb(255 255 255 / 0.08);
-  color: #f7f7f7;
+  border-color: rgb(var(--logo-rgb) / 0.3) !important;
+  background: rgb(var(--logo-rgb) / 0.1) !important;
+  color: rgb(17 17 17 / 0.92) !important;
 }
 [data-theme="light"] .site-header .theme-toggle:hover {
-  background: rgb(255 255 255 / 0.14);
+  background: rgb(var(--logo-rgb) / 0.16) !important;
 }
 
 .header-actions { display: inline-flex; align-items: center; gap: 10px; }
@@ -477,15 +499,32 @@ button, input, select, textarea { font: inherit; }
 }
 .site-header .brand--logo-only .brand-logo {
   width: auto;
-  height: 58px;
-  max-width: min(280px, 42vw);
+  height: 52px;
+  max-width: min(320px, 48vw);
   object-fit: contain;
-  filter: brightness(0) invert(1);
+  filter: none;
+}
+[data-theme="light"] .site-header .brand--logo-only .brand-logo {
+  height: 48px;
+  max-width: min(360px, 52vw);
 }
 
-/* Header logo is always white */
-.site-header .brand-logo {
-  filter: brightness(0) invert(1);
+/* Dark theme: force white logo */
+[data-theme="dark"] .site-header .brand-logo,
+[data-theme="dark"] .site-header .brand--logo-only .brand-logo {
+  filter: none;
+}
+/* Light theme: colored logo on white bar (no invert) */
+[data-theme="light"] .site-header .brand-logo,
+[data-theme="light"] .site-header .brand--logo-only .brand-logo,
+[data-theme="light"] .page-shell--destination .site-header .brand-logo,
+[data-theme="light"] .site-header--destination .brand-logo,
+[data-theme="light"] .page-shell--careers .site-header .brand-logo {
+  filter: none !important;
+}
+[data-theme="light"] .site-header .brand-mark,
+[data-theme="light"] .site-header .brand--logo-only .brand-mark {
+  filter: none !important;
 }
 .brand-mark {
   width: 72px; height: 72px; display: grid; place-items: center; border-radius: 16px;
@@ -3093,7 +3132,11 @@ h1 { margin: 14px 0 18px; font-size: clamp(2.7rem, 7vw, 5.3rem); line-height: 0.
   height: 64px;
   max-width: 240px;
   object-fit: contain;
-  filter: brightness(0) invert(1);
+  filter: none;
+}
+[data-theme="light"] .site-footer .brand--logo-only .brand-logo {
+  height: 56px;
+  max-width: 300px;
 }
 [data-theme="light"] .site-footer .brand--logo-only .brand-mark {
   filter: none;
@@ -6254,7 +6297,7 @@ html.is-admin-open body {
   }
   [data-theme="light"] .page-shell--destination .site-header,
   [data-theme="light"] .site-header--destination {
-    background: linear-gradient(180deg, rgb(255 255 255 / 0.94) 0%, rgb(255 255 255 / 0.7) 70%, transparent 100%);
+    background: #ffffff !important;
   }
   .page-shell--destination .site-header .top-nav,
   .site-header--destination .top-nav {
@@ -6793,6 +6836,93 @@ html.is-admin-open body {
     opacity: 1;
     transform: rotate(-12deg) scale(1);
   }
+}
+
+/* ========== Light theme: labels + kill leftover dark surfaces ========== */
+[data-theme="light"] .eyebrow,
+[data-theme="light"] .card-tag,
+[data-theme="light"] .mini-label,
+[data-theme="light"] .section .eyebrow {
+  color: rgb(var(--logo-rgb) / 0.92);
+}
+[data-theme="light"] .section-head h2,
+[data-theme="light"] .journey-body h3,
+[data-theme="light"] .gallery-card figcaption strong,
+[data-theme="light"] .quote-card strong,
+[data-theme="light"] .timeline-card h3,
+[data-theme="light"] .faq-trigger {
+  color: rgb(17 17 17 / 0.96);
+}
+[data-theme="light"] .section .section-copy,
+[data-theme="light"] .trip-muted,
+[data-theme="light"] .gallery-card figcaption span,
+[data-theme="light"] .timeline-card p,
+[data-theme="light"] .journey-body p,
+[data-theme="light"] .trust-strip {
+  color: rgb(17 17 17 / 0.62);
+}
+[data-theme="light"] .trust-strip {
+  background: #ffffff;
+  border-color: rgb(0 0 0 / 0.08);
+}
+
+/* Carousel arrows — never dark pills on light */
+[data-theme="light"] .trip-carousel__arrow {
+  background: #ffffff !important;
+  border-color: rgb(var(--logo-rgb) / 0.28) !important;
+  color: var(--logo) !important;
+  box-shadow: 0 6px 16px rgb(0 0 0 / 0.08);
+}
+[data-theme="light"] .trip-carousel__arrow:hover:not(:disabled) {
+  background: var(--logo) !important;
+  border-color: var(--logo) !important;
+  color: #fff !important;
+}
+
+/* Customizer select options stay readable in light */
+[data-theme="light"] .customizer-form select.customizer-select option {
+  background: #ffffff;
+  color: rgb(17 17 17 / 0.92);
+}
+[data-theme="light"] .customizer-form select.customizer-select option:first-of-type {
+  color: rgb(17 17 17 / 0.5);
+}
+[data-theme="light"] .customizer-form select.customizer-select:hover:not(:disabled) {
+  background-color: #ffffff;
+}
+
+/* Any leftover dark glass panels on the public site */
+[data-theme="light"] .section-contrast,
+[data-theme="light"] #customize.section-contrast,
+[data-theme="light"] .cta-card,
+[data-theme="light"] .journey-card,
+[data-theme="light"] .gallery-card,
+[data-theme="light"] .quote-card,
+[data-theme="light"] .faq-card,
+[data-theme="light"] .proposal-card,
+[data-theme="light"] .timeline-card,
+[data-theme="light"] .customizer-form,
+[data-theme="light"] .visual-card {
+  background-color: #ffffff;
+}
+[data-theme="light"] .section-contrast,
+[data-theme="light"] #customize.section-contrast {
+  background:
+    radial-gradient(circle at top left, rgb(var(--logo-rgb) / 0.1), transparent 45%),
+    linear-gradient(165deg, #ffffff 0%, #f6f9f7 100%);
+}
+[data-theme="light"] .cta-card {
+  background:
+    radial-gradient(circle at top right, rgb(var(--logo-rgb) / 0.12), transparent 42%),
+    linear-gradient(135deg, #ffffff 0%, #f3f7f4 100%);
+}
+
+/* Hero metrics / chips that sit on photo stay light text — OK.
+   Past-hero page chrome labels must not stay cream-on-black. */
+[data-theme="light"] .btn-secondary {
+  color: rgb(17 17 17 / 0.88);
+  border-color: rgb(0 0 0 / 0.12);
+  background: #ffffff;
 }
 
 /* Admin tabs + popups panel */

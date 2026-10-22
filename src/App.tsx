@@ -44,7 +44,15 @@ function parseHash(hash: string): { page: AppPage; destinationId: string | null 
 
 function App() {
   const [splashPhase, setSplashPhase] = useState<"pop" | "hold" | "exit" | "done">("pop");
-  const [theme, setTheme] = useState<"dark" | "light">("light");
+  const [theme, setTheme] = useState<"dark" | "light">(() => {
+    try {
+      const saved = localStorage.getItem("raah-theme");
+      if (saved === "dark" || saved === "light") return saved;
+    } catch {
+      /* ignore */
+    }
+    return "light";
+  });
   const [route, setRoute] = useState(() =>
     typeof window !== "undefined" ? parseHash(window.location.hash) : { page: "home" as AppPage, destinationId: null }
   );
@@ -69,6 +77,13 @@ function App() {
 
   useEffect(() => {
     document.documentElement.dataset.theme = theme;
+    try {
+      localStorage.setItem("raah-theme", theme);
+    } catch {
+      /* ignore */
+    }
+    const meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.setAttribute("content", theme === "light" ? "#ffffff" : "#0a100d");
   }, [theme]);
 
   useEffect(() => {
@@ -221,7 +236,7 @@ function App() {
         )}
 
         {page !== "admin" && page !== "destination" ? (
-          <Footer brand={siteContent.brand} footer={siteContent.footer} />
+          <Footer brand={siteContent.brand} footer={siteContent.footer} theme={theme} />
         ) : null}
       </div>
 
